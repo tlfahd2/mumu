@@ -15,15 +15,10 @@ def create_data(request):
     
     # 영화에 대한 정보
     total_data = []
-
     # 배우에 대한 정보저장 배열과 중복 체크 배열까지
     actor_dup = []
-    actors = []
-
     # 감독에 대한 정보 중복인지 체크할 배열까지
-    director_dup = []
-    directors = []
-
+    director_dup = []  
     # 장르 데이터 받아오기
     request_url_gerne = f"{BASE_URL}/genre/movie/list?api_key={TMDB_API}&language=ko-KR"
     genres = requests.get(request_url_gerne).json()
@@ -47,7 +42,6 @@ def create_data(request):
             # 해당 영화에 출연하는 감독, 배우를 찾기 위한 url
             request_url_credits=f"{BASE_URL}/movie/{movie['id']}/credits?api_key={TMDB_API}&language=ko-KR"
             persons = requests.get(request_url_credits).json()
-            
             # credits에서 뽑아온 사람들 중에 crew 키의 값 중 Director인 사람 dirtors에 저장
             crew = persons['crew']
             for person in crew:
@@ -66,6 +60,7 @@ def create_data(request):
                         }
                         total_data.append(data)
                         break
+            
             # credits에서 cast 키 값으로 가져온 주연 배우 10명
             main_actors = persons['cast'][:10]
              # 영화 데이터에 넣어줄 배우 id 목록 영화마다 초기화
@@ -73,12 +68,21 @@ def create_data(request):
             for actor in main_actors:
                # 해당 영화의 배우 id 목록에 넣어주지
                 movie_actor_id.append(actor['id'])
-
+                # 해당 배우의 배역 저장
+                fields={
+                    'movie': movie['id'],
+                    'actor': actor['id'],
+                    'character': actor['character']
+                }
+                data = {
+                    'model' : 'movies.Character',
+                    'fields' : fields
+                }
+                total_data.append(data)
                 # 배우 모델을 만들어줄 데이터 목록
                 if actor['id'] not in actor_dup:
                     fields = {
                             'name' : actor['name'],
-                            'character' : actor['character'],
                             'profile_path': actor['profile_path'],
                     }
                     data = {
@@ -87,6 +91,7 @@ def create_data(request):
                         'fields' : fields
                     }
                     total_data.append(data)
+                
             fields = {
                 'title' : movie['title'],
                 'overview' : movie['overview'],
@@ -106,6 +111,8 @@ def create_data(request):
                 'fields' : fields
             }
             total_data.append(data)
+           
+
     save_dir = '../back/movies/fixtures/movies_data.json'    
     with open(save_dir, "w", encoding="utf-8") as w:
         json.dump(total_data, w, indent=2, ensure_ascii=False)
