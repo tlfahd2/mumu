@@ -10,12 +10,13 @@ class Genre(models.Model):
 class Actor(models.Model):
     id = models.IntegerField(primary_key=True) # 배우 ID
     name = models.CharField(max_length=100)
+    character = models.CharField(max_length=100) # 역할
     profile_path = models.TextField()
 
 
 class Movie(models.Model):
     id = models.IntegerField(primary_key=True) # 영화 ID
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies')
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies', blank=True)
     title = models.CharField(max_length=100)
     overview = models.TextField() # 내용
     popularity = models.FloatField() # 인기도
@@ -23,7 +24,7 @@ class Movie(models.Model):
     release_date = models.DateTimeField() # 개봉일
     vote_average = models.FloatField() # 평점
     vote_count = models.IntegerField() # 평점 투표 수
-    runtime = models.ImageField() # 상영 시간
+    # runtime = models.Field() # 상영 시간
     genres = models.ManyToManyField(Genre) # 해당 영화의 장르
     actors = models.ManyToManyField(Actor) # 해당 영화의 배우
 
