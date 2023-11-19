@@ -142,14 +142,10 @@ CORS_ALLOWED_ORIGINS =[
     'http://localhost:5173'
 ]
 
-AUTH_USER_MODEL = 'accounts.user'
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
-import environ, os
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER' : 'accounts.serializers.CustomRegisterSerializer',
+}
 
-env = environ.Env(DEBUG=(bool, True))
-# 환경 변수 파일 읽어오기
-environ.Env.read_env(
-    env_file=os.path.join(BASE_DIR, '.env')
-    )
-TMDB_API = env('TMDB_API')
-
+# ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
