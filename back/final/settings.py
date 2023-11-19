@@ -130,7 +130,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK={
     'DEFAULT_AUTHENTICATION_CLASSES' : [
-        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSED' : [
@@ -138,10 +137,10 @@ REST_FRAMEWORK={
     ]
 }
 
-CORS_ALLOWED_ORIGINS ={
+CORS_ALLOWED_ORIGINS =[
     'http://127.0.0.1:5173',
     'http://localhost:5173'
-}
+]
 
 AUTH_USER_MODEL = 'accounts.user'
 
@@ -152,5 +151,6 @@ env = environ.Env(DEBUG=(bool, True))
 environ.Env.read_env(
     env_file=os.path.join(BASE_DIR, '.env')
     )
+
 TMDB_API = env('TMDB_API')
 
