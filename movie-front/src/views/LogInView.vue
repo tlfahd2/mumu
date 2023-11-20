@@ -1,4 +1,5 @@
 <template>
+  <main class="main">
     <div>
       <h1>로그인</h1>
       <form @submit.prevent="logIn">
@@ -7,6 +8,7 @@
         <input type="submit">
       </form>
     </div>
+  </main>
   </template>
   
   <script setup>
