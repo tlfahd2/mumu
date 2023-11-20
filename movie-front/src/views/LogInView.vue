@@ -10,10 +10,14 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
-  import { useMovieStore } from '@/stores/movie'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useAccountStore } from '../stores/account'
+import { useMovieStore } from '../stores/movie'
+import axios from 'axios'
+
   
-  const store = useMovieStore()
+  const accountStore = useAccountStore()
   const username = ref(null)
   const password = ref(null)
   
@@ -22,7 +26,7 @@
       username: username.value,
       password: password.value
     }
-    store.logIn(payload)
+    accountStore.logIn(payload)
   }
   </script>
   

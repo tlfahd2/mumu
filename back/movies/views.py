@@ -221,4 +221,5 @@ def create_data(request):
     save_dir = '../back/movies/fixtures/movies_data.json'    
     with open(save_dir, "w", encoding="utf-8") as w:
         json.dump(total_data, w, indent=2, ensure_ascii=False)
+        
     return Response('데이터 받기 완료', status=status.HTTP_200_OK)

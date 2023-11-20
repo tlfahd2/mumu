@@ -1,38 +1,37 @@
 <template>
   <div>
-    <nav>
       <header class="header">
-      <div>
-      <nav class="navbar">
-        <RouterLink to="/">Main</RouterLink> |
-        <RouterLink v-if="hbstore.isLogin===false" :to="{ name: 'SignUpView' }">회원가입</RouterLink> |
-      <RouterLink  v-if="hbstore.isLogin===false" :to="{ name: 'LogInView' }">로그인</RouterLink> |
-      <RouterLink  v-if="hbstore.isLogin===true" @click="hbstore.logOut" :to="{ name: 'main'}">로그아웃</RouterLink>
-      </nav>
-    </div>
-  </header>
-    </nav>
-    <RouterView/>
+          <nav class="navbar">
+            <RouterLink :to="{ name: 'main' }">Main</RouterLink> |
+            <RouterLink v-if="accountStore.isLogin === false" :to="{ name: 'SignUpView' }">회원가입</RouterLink> |
+            <RouterLink v-if="accountStore.isLogin === false" :to="{ name: 'LogInView' }">로그인</RouterLink> |
+            <RouterLink v-if="accountStore.isLogin === true" @click="accountStore.logOut" :to="{ name: 'main' }">로그아웃
+            </RouterLink>
+          </nav>
+      </header>
+  <RouterView/>
   </div>
-
 </template>
 
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { useMovieListStore } from './stores/movielist'
-import { useMovieStore } from './stores/movie'
-import { onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useAccountStore } from './stores/account.js'
+import { useMovieStore } from './stores/movie.js'
+import axios from 'axios'
 
-const store = useMovieListStore()
-onMounted(()=>{
-  store.getMovieList(1)
+
+const movieStore = useMovieStore()
+onMounted(() => {
+  movieStore.getMovieList(1)
 })
 
-const hbstore = useMovieStore()
+const accountStore = useAccountStore()
 </script>
 
 <style  scoped>
-.header{
+.header {
   position: fixed;
 }
 </style>

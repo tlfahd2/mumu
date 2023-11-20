@@ -17,19 +17,24 @@ const router = createRouter({
       component: LogInView
     },
     {
-      path: '/',
-      name: 'main',
+      path:'/logout',
+      name:'logout',
       component: MainView
     },
     {
-      path:'/logout',
-      name:'logout',
+      path: '/',
+      name: 'main',
       component: MainView
     },
     {
       path: '/moviedetail/:movie_id',
       name: 'moviedetail',
       component: () => import('../views/MovieDetailView.vue')
+    },
+    {
+      path: '/community',
+      name: 'communitymain',
+      component: () => import('../views/CommunityView.vue')
     },
   ]
 })

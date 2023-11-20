@@ -22,13 +22,15 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useMovieListStore } from '../stores/movielist'
+import { useAccountStore } from '../stores/account'
+import { useMovieStore } from '../stores/movie'
 import axios from 'axios'
+
 import MovieDetailCard from '../components/MovieDetailCard.vue'
 import PersonCard from '../components/PersonCard.vue'
 
 
-const store = useMovieListStore()
+const movieStore = useMovieStore()
 const route = useRoute()
 const movie_id = route.params.movie_id
 
@@ -36,7 +38,7 @@ const movie = ref({})
 
 axios({
         method:'get',
-        url : `${store.API_URL}/detail/${movie_id}`
+        url : `${movieStore.API_URL}/detail/${movie_id}`
     }).then((response)=>{
         movie.value = response.data
     }).catch((error)=>{

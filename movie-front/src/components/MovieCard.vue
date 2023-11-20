@@ -9,15 +9,16 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useMovieListStore } from '../stores/movielist'
+import { useAccountStore } from '../stores/account'
+import { useMovieStore } from '../stores/movie'
 import axios from 'axios'
 
 const props = defineProps({
     movie:Object
 })
-const store = useMovieListStore()
+const movieStore = useMovieStore()
 const router = useRouter()
-const posterUrl = `${store.BASE_IMAGE_URL}${props.movie.poster_path}`
+const posterUrl = `${movieStore.BASE_IMAGE_URL}${props.movie.poster_path}`
 
 
 const moveDetail = () => {
