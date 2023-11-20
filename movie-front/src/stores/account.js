@@ -101,7 +101,7 @@ export const useAccountStore = defineStore('account', () => {
     })
   }
 
-  const follow = function () {
+  const follow = function (user_id) {
     axios({
       method: 'post',
       url: `${API_URL}/api/v1/accounts/follow/${user_pk.value}/`,

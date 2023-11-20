@@ -18,7 +18,7 @@ defineProps({
 
 const accountStore = useAccountStore()
 
-const follow = ref(accountStore.follow)
+const follow = ref(accountStore.follow(accountStore.user_pk.value))
 
 const follower = ref(accountStore.follower)
 
