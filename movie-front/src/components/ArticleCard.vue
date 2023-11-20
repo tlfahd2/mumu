@@ -1,5 +1,18 @@
 <template>
-    <div>
+    <div class="article">
+        <p>{{ article.user?.username }}</p>
+        <p>{{ article.title }}</p>
+        <p>{{ article.content }}</p>
+        <p>{{ article.updated_at }}</p>
+        <form @submit.prevent="createComment(article.id)">
+            <input type="text" placeholder="댓글을 입력해주세요" v-model="commentContent">
+            <button type="submit">작성</button>
+        </form>
+        <CommentCard
+        v-for="comment in comments"
+        :key="comment.id"
+        :comment="comment"
+        />
     </div>
 </template>
 
@@ -8,8 +21,44 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAccountStore } from '../stores/account'
 import { useMovieStore } from '../stores/movie'
+import { useCommunityStore } from '../stores/community'
 import axios from 'axios'
+import CommentCard from '../components/CommentCard.vue'
 
+const props = defineProps({
+    article:Object
+})
+
+const communityStore = useCommunityStore()
+const accountStore = useAccountStore()
+const commentContent = ref('')
+const comments = ref([])
+
+const createComment= (article_pk) => {
+    axios({
+        method: 'post',
+        url: `${communityStore.API_URL}/${article_pk}/comments/`,
+        data: {
+            content :commentContent.value, 
+        },
+        headers: {
+        Authorization: `Token ${accountStore.token}`}
+    }).then((response)=>{
+        console.log('댓글 생성 완료')
+        commentContent.value = ''
+        axios({
+            method: 'get',
+            url: `${communityStore.API_URL}/${article_pk}/comments/`,
+        })
+        .then((response) =>{
+            comments.value = response.data
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }).catch((err)=>{
+        console.log(err)
+    })
+}
 
 
 </script>

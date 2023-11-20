@@ -7,10 +7,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 # 인증된 사람들만 가능하도록
 from rest_framework.permissions import IsAuthenticated
-from .models import Movie, Genre
-from .serializers import MovieListSerializer, GenreSerializer
-from community.models import Review, Comment
-from community.serializers import ReviewSerializer, CommentSerializer
+from .models import Movie, Genre, Review, Comment
+from .serializers import MovieListSerializer, GenreSerializer, ReviewSerializer, CommentSerializer
 
 
 # 영화 리스트 함수
@@ -23,19 +21,19 @@ def movie_list(request, sort_num):
         elif sort_num == 2: # 최신 - 인기 순 개봉이 된 영화들만
             movies = Movie.objects.filter(release_date__lte=date.today()).order_by('-release_date','popularity')[:500]
             serializers = MovieListSerializer(movies, many=True)
-        elif sort_num == 3:
+        elif sort_num == 3: # 맞춤 추천 
             pass
-        elif sort_num == 4:
+        elif sort_num == 4: # 개봉 예정 영화 금일 부터 가깝고 인기가 많은 순으로 정렬
             movies = Movie.objects.filter(release_date__gt=date.today()).order_by('release_date', '-popularity')
             serializers = MovieListSerializer(movies, many=True)
+        # 각 장르의 id에 맞춰 해당 장르를 역참조하여 인기도가 높은 순으로 정렬
         elif sort_num in [12, 14, 16, 18, 27, 28, 35, 36, 37, 53, 80, 99, 878, 9648, 10402, 10749, 10751, 10752, 10770]:
             genre = get_object_or_404(Genre, pk=sort_num)
             movies = genre.movie_set.all().order_by('-popularity')
             serializers = MovieListSerializer(movies, many=True)
         else:
+            # 나머지로 들어오는 요청은 없는 요청 이므로 컨텐츠 없음을 반환 해준다.
             return Response(status=status.HTTP_204_NO_CONTENT)
-
-
         return Response(serializers.data)
 
              
