@@ -154,6 +154,7 @@ AUTHENTICATION_BACKENDS = (
 
 REST_AUTH = {
     'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
+    'OLD_PASSWORD_FIELD_ENABLED' : True
 }
 
 

@@ -11,7 +11,7 @@
                         장르별
                     </button>
                     <ul class="dropdown-menu">
-                        <div v-for="genre in store.genres" 
+                        <div v-for="genre in movieStore.genres" 
                             :key="genre.id">
                             <li><a class="dropdown-item"
                                  @click="sortMovie(genre.id)">

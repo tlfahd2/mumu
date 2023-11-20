@@ -5,8 +5,9 @@
             <RouterLink :to="{ name: 'main' }">Main</RouterLink> |
             <RouterLink v-if="accountStore.isLogin === false" :to="{ name: 'SignUpView' }">회원가입</RouterLink> |
             <RouterLink v-if="accountStore.isLogin === false" :to="{ name: 'LogInView' }">로그인</RouterLink> |
-            <RouterLink v-if="accountStore.isLogin === true" @click="accountStore.logOut" :to="{ name: 'main' }">로그아웃
-            </RouterLink>
+            <RouterLink v-if="accountStore.isLogin === true" @click="accountStore.logOut" :to="{ name: 'main' }">로그아웃</RouterLink>
+            <RouterLink v-if="accountStore.isLogin === true" :to="{ name: 'change_password' }">비밀번호 변경</RouterLink>
+            
           </nav>
       </header>
   <RouterView/>
