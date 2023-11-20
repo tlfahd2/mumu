@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import router from '../router'
 
 export const useMovieStore = defineStore('movie', () => {
 
@@ -53,7 +54,7 @@ export const useMovieStore = defineStore('movie', () => {
 
   const logOut = function () {
     axios({
-      method: 'delete',
+      method: 'post',
       url: `${API_URL}/accounts/logout/`,
     })
       .then((res) => {
