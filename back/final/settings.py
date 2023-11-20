@@ -130,7 +130,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK={
     'DEFAULT_AUTHENTICATION_CLASSES' : [
-        'rest_framework.authentication.TokenAuthentication'
+        'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSED' : [
         'rest_framework.authentication.BasicAuthentication',
@@ -156,4 +156,15 @@ REST_AUTH = {
     'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
 }
 
+
 ACCOUNT_ADAPTER = 'accounts.models.CustomAccountAdapter'
+
+import environ, os
+
+env = environ.Env(DEBUG=(bool, True))
+# 환경 변수 파일 읽어오기
+environ.Env.read_env(
+    env_file=os.path.join(BASE_DIR, '.env')
+    )
+
+TMDB_API = env('TMDB_API')
