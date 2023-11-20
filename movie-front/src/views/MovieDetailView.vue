@@ -1,0 +1,56 @@
+<template>
+    <main class="main">
+        <div>
+            <h1>영화 상세</h1>
+            <MovieDetailCard
+            :movie="movie"
+            />
+            <p>감독</p>
+            <PersonCard
+            :person="movie.director"
+            />
+            <br>
+            <p>주연 배우</p>
+            <PersonCard
+            v-for="actor in movie.actors"
+            :person="actor"
+            />
+        </div>
+    </main>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useMovieListStore } from '../stores/movielist'
+import axios from 'axios'
+import MovieDetailCard from '../components/MovieDetailCard.vue'
+import PersonCard from '../components/PersonCard.vue'
+
+
+const store = useMovieListStore()
+const route = useRoute()
+const movie_id = route.params.movie_id
+
+const movie = ref({})
+
+axios({
+        method:'get',
+        url : `${store.API_URL}/detail/${movie_id}`
+    }).then((response)=>{
+        movie.value = response.data
+    }).catch((error)=>{
+        console.log(error)
+    })
+
+
+
+
+
+</script>
+
+<style scoped>
+.main{
+    padding-top: 5.8rem;
+}
+</style>

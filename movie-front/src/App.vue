@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <nav>
       <header class="header">
@@ -14,6 +15,16 @@
     </nav>
     <RouterView/>
   </div>
+
+  <header class="header">
+    <div>
+      <nav class="navbar">
+        <RouterLink to="/">Main</RouterLink>
+      </nav>
+    </div>
+  </header>
+  <RouterView/>
+
 </template>
 
 <script setup>
