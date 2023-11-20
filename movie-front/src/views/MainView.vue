@@ -22,7 +22,7 @@
                 </div>
             </div>
             <MovieCard
-            v-for="movie in store.movies"
+            v-for="movie in movieStore.movies"
             :key="movie.id"
             :movie="movie"
             />
@@ -33,19 +33,21 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useMovieListStore } from '../stores/movielist'
+import { useAccountStore } from '../stores/account'
+import { useMovieStore } from '../stores/movie'
 import axios from 'axios'
+
 import MovieCard from '../components/MovieCard.vue'
 
-const store = useMovieListStore()
+const movieStore = useMovieStore()
 const router = useRouter()
 
 onMounted(()=>{
-    store.getGenreList()
+    movieStore.getGenreList()
 })
 
 const sortMovie= (number) =>{
-    store.getMovieList(number)
+    movieStore.getMovieList(number)
 }
 
 </script>

@@ -43,10 +43,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useMovieStore } from '@/stores/movie'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useAccountStore } from '../stores/account'
+import { useMovieStore } from '../stores/movie'
+import axios from 'axios'
 
-const store = useMovieStore()
+
+const accountStore = useAccountStore()
 
 const name = ref(null)
 const year = ref(null)
@@ -84,7 +88,7 @@ const signUp = function () {
         password1: password1.value,
         password2: password2.value
     }
-    store.signUp(payload)
+    accountStore.signUp(payload)
 }
 </script>
 

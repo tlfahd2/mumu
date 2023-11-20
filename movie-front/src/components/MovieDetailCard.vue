@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <img :src="store.BASE_IMAGE_URL+movie.poster_path" :alt="movie.title">
+        <img :src="movieStore.BASE_IMAGE_URL+movie.poster_path" :alt="movie.title">
         <p v-if="movie.adult">성인</p>
         <p v-for="genre in movie.genres">{{ genre.name }}</p>
         <p>{{ movie.release_date }}</p>
@@ -13,10 +13,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useMovieListStore } from '../stores/movielist'
+import { useAccountStore } from '../stores/account'
+import { useMovieStore } from '../stores/movie'
 import axios from 'axios'
 
-const store = useMovieListStore()
+const movieStore = useMovieStore()
 const props = defineProps({
     movie:Object
 })

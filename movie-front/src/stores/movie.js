@@ -1,69 +1,41 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import router from '../router'
 
 export const useMovieStore = defineStore('movie', () => {
+    const API_URL = 'http://127.0.0.1:8000/api/v1/movies'
+    const BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500"
 
-  const API_URL = 'http://127.0.0.1:8000'
-  const token = ref(null)
-
-  const signUp = function (payload) {
-    const { name, year, month, day, gender, username, password1, password2 } = payload
-
-    axios({
-      method: 'post',
-      url: `${API_URL}/accounts/signup/`,
-      data: {
-        name, year, month, day, gender, username, password1, password2
-      }
-    })
-      .then(res => {
-        const password = password1
-        logIn({ username, password })
-      })
-      .catch(err => console.log(err))
-  }
-
-  const logIn = function (payload) {
-    const { username, password } = payload
-
-    axios({
-      method: 'post',
-      url: `${API_URL}/accounts/login/`,
-      data: {
-        username, password
-      }
-    })
-      .then((res) => {
-        token.value = res.data.key
-        router.push({ name: 'main' })
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
-
-  const isLogin = computed(() => {
-    if (token.value === null) {
-      return false
-    } else {
-      return true
+    const movies = ref([])
+    const genres = ref([])
+    
+    const getMovieList=(sort_num)=>{
+        axios({
+            method: 'get',
+            url: `${API_URL}/sort/${sort_num}`
+          })
+           .then((response)=>{
+            console.log(response.data)
+            movies.value = response.data
+           })
+           .catch((error)=>{
+            console.log(error)
+           })
     }
-  })
+    
+    const getGenreList = () =>{
+      axios({
+        method : 'get',
+        url:`${API_URL}/genres`
+      }).then((response)=>{
+        console.log(response.data)
+        genres.value = response.data
+       })
+       .catch((error)=>{
+        console.log(error)
+       })
+    }
+   
 
-  const logOut = function () {
-    axios({
-      method: 'post',
-      url: `${API_URL}/accounts/logout/`,
-    })
-      .then((res) => {
-        token.value = null
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
-
-  return { API_URL, signUp, logIn, token, isLogin, logOut }
-}, { persist: true} )
+  return { movies, genres, API_URL, BASE_IMAGE_URL, getMovieList, getGenreList }
+}, { persist:true })

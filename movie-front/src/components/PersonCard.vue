@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <img v-if="person?.profile_path" :src="store.BASE_IMAGE_URL+person?.profile_path" :alt="person?.name">
+        <img v-if="person?.profile_path" :src="movieStore.BASE_IMAGE_URL+person?.profile_path" :alt="person?.name">
         <p>{{ person?.name }}</p>
     </div>
 </template>
@@ -8,10 +8,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useMovieListStore } from '../stores/movielist'
+import { useAccountStore } from '../stores/account'
+import { useMovieStore } from '../stores/movie'
 import axios from 'axios'
 
-const store = useMovieListStore()
+const movieStore = useMovieStore()
 const props = defineProps({
     person:Object
 })
