@@ -1,4 +1,5 @@
 from django.db import models
+from communities.models import Review
 from django.conf import settings
 
 
@@ -37,17 +38,16 @@ class Movie(models.Model):
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies', blank=True) # 해당 영화 좋아요 누른 유저 정보 
 
 
-class Character(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    actor = models.ForeignKey(Actor, on_delete=models.CASCADE, related_name='actor_character')
-    character = models.CharField(max_length=100)
+# class Character(models.Model):
+#     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+#     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, related_name='actor_character')
+#     character = models.CharField(max_length=100)
 
 
 
-class Rank(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    score = models.FloatField()
+# class Rank(models.Model):
+#     review = models.ForeignKey(Review, on_delete=models.CASCADE)
+#     score = models.FloatField()
 
 
 

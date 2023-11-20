@@ -9,6 +9,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from .models import Movie, Genre
 from .serializers import MovieListSerializer, GenreSerializer
+from community.models import Review, Comment
+from community.serializers import ReviewSerializer, CommentSerializer
 
 
 # 영화 리스트 함수
@@ -50,6 +52,50 @@ def movie_detail(request, movie_id):
         movie = get_object_or_404(Movie, pk=movie_id)
         serializer = MovieListSerializer(movie)
         return Response(serializer.data)
+
+# 영화 리뷰 
+@api_view(["GET"])
+def review_list(request, movie_pk):
+    movie = get_object_or_404(Movie, pk = movie_pk)
+    if request.method == 'GET':
+        reviews = movie.review_set.all()
+        serializers = ReviewSerializer(reviews, many= True)
+        return Response(serializers.data)
+    elif request.method == "POST":
+        serializer = ReviewSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+           serializer.save(movie=movie)
+           return Response(serializer.data, status=status.HTTP_201_CREATED)
+      
+
+
+@api_view(["GET"])
+def review_detail(request, review_pk):
+    if request.method == "GET":
+        review = get_object_or_404(Review, pk=review_pk)
+        serializer = ReviewSerializer(review)
+        return Response(serializer.data)
+
+
+@api_view(["GET"])
+def review_comments(request, review_pk):
+    review = get_object_or_404(Review, pk=review_pk)
+    if request.method == 'GET':
+        comments = review.comment_set.all()
+        serializers = CommentSerializer(comments, many= True)
+        return Response(serializers.data)
+    elif request.method == "POST":
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+           serializer.save(review=review)
+           return Response(serializer.data, status=status.HTTP_201_CREATED)
+   
+
+
+@api_view(["GET"])
+def review_comment(request, review_pk, comment_pk):
+   pass
+
 
 
 
@@ -137,17 +183,6 @@ def create_data(request):
         for actor in main_actors:
             # 해당 영화의 배우 id 목록에 넣어주지
             movie_actor_id.append(actor['id'])
-            # 해당 배우의 배역 저장
-            fields={
-                'movie': movie['id'],
-                'actor': actor['id'],
-                'character': actor['character']
-            }
-            data = {
-                'model' : 'movies.Character',
-                'fields' : fields
-            }
-            total_data.append(data)
             # 배우 모델을 만들어줄 데이터 목록
             if actor['id'] not in actor_dup:
                 fields = {
