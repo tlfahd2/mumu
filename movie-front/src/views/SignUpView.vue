@@ -2,8 +2,8 @@
     <div>
         <h1>회원가입</h1>
         <form @submit.prevent="signUp">
-            <label for="name">이름 : </label>
-            <input type="text" id="name" v-model.trim="name">
+            <!-- <label for="name">이름 : </label> -->
+            <input type="text" id="name" v-model.trim="name" placeholder="name">
             <br>
             <br>
             <p>생년월일 : </p>
@@ -25,17 +25,29 @@
             <label for="woman">여자</label>
             <br>
             <br>
-            <label for="username">아이디 : </label>
-            <input type="text" id="username" v-model.trim="username">
+            <!-- <label for="username">아이디 : </label> -->
+            <input type="text" id="username" v-model.trim="username" placeholder="id">
             <br>
             <br>
-            <label for="password1">비밀번호 : </label>
-            <input type="password" id="password1" v-model.trim="password1">
+            <div class="password_eye">
+                <!-- <label for="password1">비밀번호 : </label> -->
+                <div class="input-container">
+                    <input v-if="is_looking === false" type="password" id="password1" v-model.trim="password1" placeholder="password"/>
+                    <input v-if="is_looking === true" type="text" id="password1" v-model.trim="password1" placeholder="password"/>
+                    <label class="bi" @click="change_looking">
+                        <i v-if="!is_looking" class="bi-eyeglasses"></i>
+                        <i v-else class="bi-sunglasses"></i>
+                    </label>
+                </div>
+            </div>
             <br>
-            <br>
-            <label for="password2">비밀번호 확인 : </label>
-            <input type="password" id="password2" v-model.trim="password2">
-            <br>
+            <div class="password_eye">
+                <!-- <label for="password2">비밀번호 확인 : </label> -->
+                <div class="input-container">
+                    <input v-if="is_looking === false" type="password" id="password2" v-model.trim="password2" placeholder="password confirm"/>
+                    <input v-if="is_looking === true" type="text" id="password2" v-model.trim="password2" placeholder="password confirm"/>
+                </div>
+            </div>
             <br>
             <input type="submit" value="SignUp">
         </form>
@@ -65,6 +77,8 @@ let years = ref([])
 let months = ref([])
 let days = ref([])
 
+let is_looking = ref(false)
+
 for (let index = 2023; index > 1900;index--) {
     years.value.push(index);
 }
@@ -90,8 +104,31 @@ const signUp = function () {
     }
     accountStore.signUp(payload)
 }
+
+const change_looking = function () {
+    is_looking.value = !is_looking.value
+}
 </script>
 
 <style scoped>
+.password_eye {
+    position:relative;
+}
 
+.input-container {
+  position: relative;
+  display: inline-block;
+}
+
+.input-container input {
+  padding-right: 30px; 
+}
+
+.bi {
+  position: absolute;
+  top: 50%;
+  right: 10px; 
+  transform: translateY(-50%);
+  cursor: pointer;
+}
 </style>
