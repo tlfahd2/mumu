@@ -12,7 +12,7 @@ export const useMovieListStore = defineStore('movielist', () => {
     const getMovieList=(sort_num)=>{
         axios({
             method: 'get',
-            url: `${API_URL}/${sort_num}`
+            url: `${API_URL}/sort/${sort_num}`
           })
            .then((response)=>{
             console.log(response.data)

@@ -1,5 +1,5 @@
 from django.db import models
-from communities.models import Review
+
 from django.conf import settings
 
 
