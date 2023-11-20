@@ -22,7 +22,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # 만든 앱
     'movies',
-    'communities',
+    'communitiy',
     'accounts',
 
     'rest_framework',
