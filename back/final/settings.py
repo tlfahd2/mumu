@@ -133,7 +133,7 @@ REST_FRAMEWORK={
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSED' : [
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.authentication.BasicAuthentication',
     ]
 }
 
@@ -142,7 +142,22 @@ CORS_ALLOWED_ORIGINS =[
     'http://localhost:5173'
 ]
 
-AUTH_USER_MODEL = 'accounts.user'
+AUTH_USER_MODEL = 'accounts.User'
+
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = None
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend"
+)
+
+REST_AUTH = {
+    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
+}
+
+
+ACCOUNT_ADAPTER = 'accounts.models.CustomAccountAdapter'
 
 import environ, os
 
@@ -151,6 +166,4 @@ env = environ.Env(DEBUG=(bool, True))
 environ.Env.read_env(
     env_file=os.path.join(BASE_DIR, '.env')
     )
-
 TMDB_API = env('TMDB_API')
-
