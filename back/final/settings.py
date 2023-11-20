@@ -166,5 +166,4 @@ env = environ.Env(DEBUG=(bool, True))
 environ.Env.read_env(
     env_file=os.path.join(BASE_DIR, '.env')
     )
-
 TMDB_API = env('TMDB_API')
