@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import axios from 'axios'
 
 export const useMovieStore = defineStore('movie', () => {
 
@@ -17,7 +18,8 @@ export const useMovieStore = defineStore('movie', () => {
       }
     })
       .then(res => {
-        console.log('회원가입 완료')
+        const password = password1
+        logIn({ username, password })
       })
       .catch(err => console.log(err))
   }
@@ -34,6 +36,7 @@ export const useMovieStore = defineStore('movie', () => {
     })
       .then((res) => {
         token.value = res.data.key
+        router.push({ name: 'main' })
       })
       .catch((err) => {
         console.log(err)
@@ -50,7 +53,7 @@ export const useMovieStore = defineStore('movie', () => {
 
   const logOut = function () {
     axios({
-      method: 'post',
+      method: 'delete',
       url: `${API_URL}/accounts/logout/`,
     })
       .then((res) => {
