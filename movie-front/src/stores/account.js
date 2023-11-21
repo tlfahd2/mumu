@@ -101,23 +101,21 @@ export const useAccountStore = defineStore('account', () => {
     })
   }
 
-  const follow = function (user_id) {
-    axios({
-      method: 'post',
-      url: `${API_URL}/api/v1/accounts/follow/${user_pk.value}/`,
-      headers: {
-        Authorization: `Token ${token.value}`
-      }
-    })
-    .then((res) => {
-      console.log('팔로우')
-      followers()
-      followings()
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
+  // const follow = function (username) {
+  //   axios({
+  //     method: 'post',
+  //     url: `${API_URL}/api/v1/accounts/follow/${username.value}/`,
+  //     headers: {
+  //       Authorization: `Token ${token.value}`
+  //     }
+  //   })
+  //   .then((res) => {
+  //     console.log('팔로우')
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
+  // }
     
   const getUserInfo = function (token) {
     axios({
@@ -136,36 +134,36 @@ export const useAccountStore = defineStore('account', () => {
       })
   } 
 
-  const followers = function () {
-    axios({
-      method: 'get',
-      url: `${API_URL}/api/v1/accounts/follow/${user_pk.value}/`,
-      headers: {
-        Authorization: `Token ${token.value}`
-      }
-    })
-    .then((res) => {
-      follower.value = res.data
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
+  // const followers = function () {
+  //   axios({
+  //     method: 'get',
+  //     url: `${API_URL}/api/v1/accounts/follow/${user_pk.value}/`,
+  //     headers: {
+  //       Authorization: `Token ${token.value}`
+  //     }
+  //   })
+  //   .then((res) => {
+  //     follower.value = res.data
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
+  // }
 
-  const followings = function () {
-    axios({
-      method: 'get',
-      url: `${API_URL}/api/v1/accounts/following/${user_pk.value}/`,
-      headers: {
-        Authorization: `Token ${token.value}`
-      }
-    })
-    .then((res) => {
-      following.value = res.data
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
-  return { API_URL, signUp, logIn, token, isLogin, logOut, change_password, user_pk, follow, getUserInfo, user_username, followers, follower, followings, following }
+  // const followings = function () {
+  //   axios({
+  //     method: 'get',
+  //     url: `${API_URL}/api/v1/accounts/following/${user_pk.value}/`,
+  //     headers: {
+  //       Authorization: `Token ${token.value}`
+  //     }
+  //   })
+  //   .then((res) => {
+  //     following.value = res.data
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
+  // }
+  return { API_URL, signUp, logIn, token, isLogin, logOut, change_password, user_pk, getUserInfo, user_username, follower, following }
 }, { persist: true} )

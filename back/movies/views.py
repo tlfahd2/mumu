@@ -54,7 +54,7 @@ def movie_detail(request, movie_id):
         return Response(serializer.data)
 
 # 영화 리뷰 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 def review_list(request, movie_pk):
     movie = get_object_or_404(Movie, pk = movie_pk)
     if request.method == 'GET':
@@ -77,7 +77,7 @@ def review_detail(request, review_pk):
         return Response(serializer.data)
 
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 def review_comments(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
     if request.method == 'GET':

@@ -72,4 +72,3 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             user.save()
         return user
     
-    
