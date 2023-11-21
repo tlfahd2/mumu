@@ -8,6 +8,7 @@ export const useMovieStore = defineStore('movie', () => {
 
     const movies = ref([])
     const genres = ref([])
+    const reviews = ref([])
     
     const getMovieList=(sort_num)=>{
         axios({
@@ -15,7 +16,6 @@ export const useMovieStore = defineStore('movie', () => {
             url: `${API_URL}/sort/${sort_num}`
           })
            .then((response)=>{
-            console.log(response.data)
             movies.value = response.data
            })
            .catch((error)=>{
@@ -28,14 +28,35 @@ export const useMovieStore = defineStore('movie', () => {
         method : 'get',
         url:`${API_URL}/genres`
       }).then((response)=>{
-        console.log(response.data)
         genres.value = response.data
        })
        .catch((error)=>{
         console.log(error)
        })
     }
-   
+    const getReviewList = (choice_num) =>{
+      if (choice_num===2){
+        axios({
+          method: 'get',
+          url: `${API_URL}/reviews/`
+        }).then((response)=>{
+            reviews.value = response.data
+        }).catch((err)=>{
+            console.log(err)
+        })
+      }
+      // else if (choice_num === 2){
+      //   axios({
+      //     method: 'get',
+      //     url: `${API_URL}/reviews/`
+      //   }).then((response)=>{
+      //       reviews.value = response.data
+      //   }).catch((err)=>{
+      //       console.log(err)
+      //   })
+      // }
+  }
+ 
 
-  return { movies, genres, API_URL, BASE_IMAGE_URL, getMovieList, getGenreList }
+  return { movies, genres, API_URL, BASE_IMAGE_URL, getMovieList, getGenreList, getMovieList }
 }, { persist:true })

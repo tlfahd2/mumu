@@ -44,6 +44,21 @@ const router = createRouter({
       component: () => import('../views/CommunityView.vue')
     },
     {
+      path:'/createArticle',
+      name:'createArticle',
+      component : () => import('../views/ArticleCreateView.vue')
+    },
+    {
+      path:'/updateArticle/:article_id',
+      name:'updateArticle',
+      component : () => import('../views/ArticleUpdateView.vue')
+    },
+    {
+      path:'/articledetail/:article_id',
+      name:'articleDetail',
+      component : () => import('../views/ArticleDetailView.vue')
+    },
+    {
       path: `/:username`,
       name: 'profile',
       component: () => import('../views/ProfileView.vue')

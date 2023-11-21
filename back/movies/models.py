@@ -37,7 +37,26 @@ class Movie(models.Model):
     director = models.ForeignKey(Director, on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies', blank=True) # 해당 영화 좋아요 누른 유저 정보 
 
+# 영화에 대한 리뷰 게시판
+class Review(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews')
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='hate_users')
+    content = models.CharField(max_length=200)
+    rank = models.FloatField()
+    is_like = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
+
+class Comment(models.Model):
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='review_comments')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='review_comment_user')
+    content = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
 # class Character(models.Model):
 #     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 #     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, related_name='actor_character')
