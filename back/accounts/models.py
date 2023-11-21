@@ -71,3 +71,4 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         if commit:
             user.save()
         return user
+    
