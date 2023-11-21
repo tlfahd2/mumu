@@ -57,7 +57,10 @@ def article_comments(request, article_pk):
 
 @api_view(["PUT","DELETE"])
 def article_comment(request, article_pk, comment_pk):
-   pass
+   comment = get_object_or_404(Comment, pk=comment_pk)
+   if request.method == "DELETE":
+      comment.delete()
+      return Response('댓글 삭제', status=status.HTTP_204_NO_CONTENT)
 
 
 

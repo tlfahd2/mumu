@@ -4,17 +4,6 @@
             <section>
                 <h1>커뮤니티</h1>
                 <h4>영화에 대한 이야기를 나누는 쉼터</h4>
-                <!-- 드랍 다운 방식 
-                    <div class="btn-group">
-                        <button type="button" class="dropdown-toggle cta" data-bs-toggle="dropdown" aria-expanded="false">
-                            게시판 종류
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><button class="dropdown-item" @click="change(1)">자유 게시판</button></li>
-                            <li><button class="dropdown-item" @click="change(2)">리뷰 게시판</button></li>
-                            <li><button class="dropdown-item" @click="change(3)">영화별 게시판</button></li> 
-                        </ul>
-                </div> -->
                 <select v-model="choice">                        
                     <option class="dropdown-item" :value="1">자유 게시판</option>
                     <option class="dropdown-item" :value="2">리뷰 게시판</option>
@@ -34,10 +23,31 @@
                 </div>
 
                 <h1 v-if="choice === 2">리뷰 게시판</h1>
+                <button v-if="choice === 2" @click="createReview">리뷰 생성</button>
+                <div
+                v-if="choice===2"
+                v-for="review in movieStore?.reviews"
+                :key="reivew.id"
+                @click="moveReviewDetail(review.id)"
+                >
+                <img :src="movieStore.BASE_IMAGE_URL+review.movie.poster_path" :alt="review.movie.title">
+                <p>{{ review.movie.title }}</p>
+                <p>{{ review.content }}</p>
+                <p>{{ review.rank }}</p>
+                </div>
                 <h1 v-if="choice === 3">영화별 리뷰</h1>
-                <ReviewCard 
+                <div
+                v-if="choice===3"
+                v-for="movie in movies"
+                :key="movie.id"
+                @click="moveMovieReview(movie.id)"
+                >
+                <img :src="movieStore.BASE_IMAGE_URL+movie.poster_path" :alt="movie.title">
+    
+                </div>
+                <!-- <ReviewCard 
                 v-if="choice === 2 || choice === 3"
-                />
+                /> -->
             </section>
         </div>
     </main>
@@ -55,9 +65,10 @@ import ReviewCard from '../components/ReviewCard.vue'
 
 const router = useRouter()
 const communityStore = useCommunityStore()
-
+const movieStore = useMovieStore()
 
 const choice = ref(1)
+const movies = ref([])
 
 onMounted(() => {
     communityStore.getArticleList()
@@ -70,6 +81,29 @@ const moveDetail = (article_id)=>{
     router.push({ name:'articleDetail', params:{ article_id: article_id }})
 }
 
+// 리뷰게시판
+onMounted(() => {
+    movieStore.getReviewList()
+    for (let index = 0; index < movieStore.reviews.length; index++) {
+        if (reviews[index].movie in movies) {
+            continue
+        } else {
+            reviews[index].movie.push(movies)
+        }
+        
+    }
+})
+const createReview = () => {
+    router.push({ name:'createReview' })
+}
+const moveReviewDetail = (review_id)=>{
+    router.push({ name:'reviewDetail', params:{ review_id: review_id }})
+}
+
+// 영화별 리뷰
+const moveMovieReview = (movie_id) => {
+    router.push({ name: 'movieReviews', params: {movie_id: movie_id}})
+}
 // 드랍 다운 할 경우 사용
 // const change = (choice_num) => {
 //     choice.value = choice_num

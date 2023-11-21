@@ -12,12 +12,14 @@ class Actor(models.Model):
     id = models.IntegerField(primary_key=True) # 배우 ID
     name = models.CharField(max_length=100)
     profile_path = models.TextField(null=True, blank=True)
+    another_name = models.TextField(null=True, blank=True)
 
 
 class Director(models.Model):
     id = models.IntegerField(primary_key=True) 
     name = models.CharField(max_length=100)
     profile_path = models.TextField(null=True, blank=True)
+    another_name = models.TextField(null=True, blank=True)
 
 
 class Movie(models.Model):
@@ -42,10 +44,9 @@ class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews')
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='hate_users')
+    hate_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='hate_reviews')
     content = models.CharField(max_length=200)
     rank = models.FloatField()
-    is_like = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

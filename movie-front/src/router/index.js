@@ -59,6 +59,26 @@ const router = createRouter({
       component : () => import('../views/ArticleDetailView.vue')
     },
     {
+      path:'/createReview',
+      name:'createReview',
+      component : () => import('../views/ReviewCreateView.vue')
+    },
+    {
+      path:'/updateReview/:review_id',
+      name:'updateReview',
+      component : () => import('../views/ReviewUpdateView.vue')
+    },
+    {
+      path:'/reviewdetail/:review_id',
+      name:'reviewDetail',
+      component : () => import('../views/ReviewDetailView.vue')
+    },
+    {
+      path:'/:movie_id/reviews',
+      name:'movieReviews',
+      component : () => import('../views/MovieReviewsView.vue')
+    },
+    {
       path: `/:username`,
       name: 'profile',
       component: () => import('../views/ProfileView.vue')
@@ -67,12 +87,7 @@ const router = createRouter({
       path: `/:username/follow`,
       name: 'follow',
       component: () => import('../components/FollowListModal.vue')
-    },
-    {
-      path:'/createReview',
-      name:'createReview',
-      component : () => import('../views/ReviewCreateView.vue')
-    },
+    }
   ]
 })
 

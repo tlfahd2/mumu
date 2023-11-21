@@ -1,17 +1,16 @@
 <template>
     <main class="main">
         <div>
-            <h1>{{ user.username }}의 프로필</h1>
-            <div v-if="accountStore.user_username !== user.username ">
-                <button @click="follow" v-if="accountStore.isFollow === true">팔로우 취소</button>
-                <button @click="follow" v-else>팔로우</button>
-            </div>
-            <p @click="follow_list()" type="button">팔로워 : {{ user.followers?.length }}</p>
-            <p>팔로잉 : {{ user.followings?.length }}</p>
-            
-            <!-- <FollowListModal :user="user"/> -->
-            <!-- v-if="isFollowListModalVisible === true" 
-            @close="closeFollowListModal"  -->
+        <h1>{{ user.username }}의 프로필</h1>
+        <div v-if="accountStore.user_username !== user.username ">
+            <button @click="follow" v-if="isFollow === true">팔로우 취소</button>
+            <button @click="follow" v-else>팔로우</button>
+        </div>
+        <p @click="follow_list()" type="button">팔로워 : {{ user.followers?.length }}</p>
+        <p>팔로잉 : {{ user.followings?.length }}</p>
+        <p v-for="follower in user.followers"> {{follower.username }}</p>
+        <!-- v-if="isFollowListModalVisible === true" 
+        @close="closeFollowListModal"  -->
     </div>
     </main>
 </template>
@@ -29,6 +28,7 @@ const accountStore = useAccountStore()
 const router = useRouter()
 const route = useRoute()
 const user = ref({})
+const isFollow = ref('')
 const isFollowListModalVisible = ref(false)
 
 const getUser = function () {
@@ -59,7 +59,7 @@ const follow = function () {
     })
     .then((res) => {
         getUser()
-        accountStore.isFollow = res.data
+        isFollow.value = res.data
     })
     .catch((err) => {
       console.log(err)

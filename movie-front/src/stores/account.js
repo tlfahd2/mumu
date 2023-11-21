@@ -11,7 +11,6 @@ export const useAccountStore = defineStore('account', () => {
   const user_username = ref(null)
   const follower = ref('')
   const following = ref('')
-  const isFollow = ref(false)
 
   const signUp = function (payload) {
     const { name, year, month, day, gender, username, password1, password2 } = payload
@@ -166,5 +165,5 @@ export const useAccountStore = defineStore('account', () => {
   //     console.log(err)
   //   })
   // }
-  return { API_URL, signUp, logIn, token, isLogin, logOut, change_password, user_pk, getUserInfo, user_username, follower, following, isFollow }
+  return { API_URL, signUp, logIn, token, isLogin, logOut, change_password, user_pk, getUserInfo, user_username, follower, following }
 }, { persist: true} )
