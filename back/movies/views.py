@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from .models import Movie, Genre, Review, Comment
 from .serializers import MovieListSerializer, GenreSerializer, ReviewSerializer, CommentSerializer
+from accounts.models import User
 
 
 # 영화 리스트 함수
@@ -114,6 +115,18 @@ def review_comment(request, review_pk, comment_pk):
    pass
 
 
+# 영화 좋아요
+@api_view(["POST"])
+def like_movies(request, movie_pk, user_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    user = get_object_or_404(User, pk=user_pk)
+    if movie.like_users.filter(pk=user.pk).exists():
+        movie.like_users.remove(user)
+        movie_like = False
+    else:
+        movie.like_users.add(user)
+        movie_like = True
+    return Response(movie_like)
 
 
 # 영화 관련 데이터를 받아와서 제이슨으로 저장 하는 함수
