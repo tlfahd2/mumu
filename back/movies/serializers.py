@@ -38,7 +38,7 @@ class MovieListSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ('id','user','content','rank',)
 
 
 class CommentSerializer(serializers.ModelSerializer):

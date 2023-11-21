@@ -54,7 +54,7 @@ def movie_detail(request, movie_id):
 
 
 # 전체 리뷰 조회 및 영화가 주어지지 않은 리뷰 생성 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 def review_list(request):
     if request.method == 'GET':
         reviews = get_list_or_404(Review)
