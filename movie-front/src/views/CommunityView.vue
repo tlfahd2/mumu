@@ -24,16 +24,19 @@
             <section>
                 <h1 v-if="choice === 1">자유 게시판</h1>
                 <button v-if="choice === 1" @click="createArticle">게시글 생성</button>
-                <ArticleCard 
-                    v-if="choice===1"
-                    v-for="article in communityStore?.articles"
-                    :article="article"
-                    />
+                <div
+                v-if="choice===1"
+                v-for="article in communityStore?.articles"
+                :key="article.id"
+                @click="moveDetail(article.id)"
+                >
+                <p>{{ article.title }}</p>
+                </div>
+
                 <h1 v-if="choice === 2">리뷰 게시판</h1>
                 <h1 v-if="choice === 3">영화별 리뷰</h1>
                 <ReviewCard 
                 v-if="choice === 2 || choice === 3"
-                
                 />
             </section>
         </div>
@@ -62,6 +65,9 @@ onMounted(() => {
 
 const createArticle = () => {
     router.push({ name:'createArticle' })
+}
+const moveDetail = (article_id)=>{
+    router.push({ name:'articleDetail', params:{ article_id: article_id }})
 }
 
 // 드랍 다운 할 경우 사용

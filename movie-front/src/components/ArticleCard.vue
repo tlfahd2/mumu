@@ -3,7 +3,10 @@
         <p>{{ article.user?.username }}</p>
         <p>{{ article.title }}</p>
         <p>{{ article.content }}</p>
-        <p>{{ article.updated_at }}</p>
+        <p>작성일 :{{ article.created_at }}</p>
+        <p>수정일 :{{ article.updated_at }}</p>
+        <button class="btn btn-sm btn-primary" @click="updateArticle">게시글 수정</button>
+        <button class="btn btn-sm btn-danger" @click="deleteArticle()">게시글 삭제</button>
         <form @submit.prevent="createComment(article.id)">
             <input type="text" placeholder="댓글을 입력해주세요" v-model="commentContent">
             <button type="submit">작성</button>
@@ -31,9 +34,30 @@ const props = defineProps({
 
 const communityStore = useCommunityStore()
 const accountStore = useAccountStore()
+const router = useRouter()
 const commentContent = ref('')
 const comments = ref([])
 
+onMounted(()=>{
+    
+})
+
+const updateArticle = () =>{
+    router.push({name : 'updateArticle', params:{article_id:props.article.id}})
+}
+
+const deleteArticle = ()=>{
+    axios({
+        method:'delete',
+        url: `${communityStore.API_URL}/${props.article.id}/`,
+        headers: {
+            Authorization: `Token ${accountStore.token}`}
+    }
+    ).then((response)=>{
+        console.log(response.data)
+        router.push({name:'communitymain'})
+    })
+}
 const createComment= (article_pk) => {
     axios({
         method: 'post',

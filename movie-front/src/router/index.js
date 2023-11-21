@@ -40,6 +40,16 @@ const router = createRouter({
       path:'/createArticle',
       name:'createArticle',
       component : () => import('../views/ArticleCreateView.vue')
+    },
+    {
+      path:'/updateArticle/:article_id',
+      name:'updateArticle',
+      component : () => import('../views/ArticleUpdateView.vue')
+    },
+    {
+      path:'/articledetail/:article_id',
+      name:'articleDetail',
+      component : () => import('../views/ArticleDetailView.vue')
     }
   ]
 })
