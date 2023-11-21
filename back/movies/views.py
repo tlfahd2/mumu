@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, re
 from datetime import date
 from django.conf import settings
 from django.shortcuts import render, get_list_or_404, get_object_or_404
@@ -37,6 +37,12 @@ def movie_list(request, sort_num):
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(serializers.data)
 
+
+@api_view(["GET"])
+def search_movie(request, keyward):
+    movies = Movie.objects.filter(title__icontains=keyward) | Movie.objects.filter(overview__icontains=keyward)
+    serializers = MovieListSerializer(movies, many=True)
+    return Response(serializers.data)
              
 @api_view(["GET"])
 def genre_list(request):
@@ -155,7 +161,7 @@ def create_data(request):
         upcoming = requests.get(request_url_upcoming).json()
         movies += upcoming['results']
     # 인기 영화 중 상위 10000개 데이터 가져오기 1page당 20개의 데이터
-    for page in range(1, 10):
+    for page in range(1, 2):
         request_url_movies = f"{BASE_URL}/movie/popular?api_key={TMDB_API}&language=ko-KR&page={page}"
         popular = requests.get(request_url_movies).json()
         movies += popular['results']
@@ -170,6 +176,7 @@ def create_data(request):
         request_url_movie = f"{BASE_URL}/movie/{movie['id']}?api_key={TMDB_API}&language=ko-KR"
         request_url_credits=f"{BASE_URL}/movie/{movie['id']}/credits?api_key={TMDB_API}&language=ko-KR"
         request_url_video = f"{BASE_URL}/movie/{movie['id']}/videos?api_key={TMDB_API}&language=ko-KR"
+        
         persons = requests.get(request_url_credits).json()
         moviedetail = requests.get(request_url_movie).json()
         videos = requests.get(request_url_video).json()
@@ -184,13 +191,16 @@ def create_data(request):
                     break
         # credits에서 뽑아온 사람들 중에 crew 키의 값 중 Director인 사람 director에 저장
         crew = persons['crew']
-        for person in crew:
-            if person['job'] == 'Director':
-                director_id = person['id']
+        for crew_person in crew:
+            if crew_person['job'] == 'Director':
+                request_url_person = f"{BASE_URL}/person/{crew_person['id']}?api_key={TMDB_API}&language=ko-KR"
+                director = requests.get(request_url_person).json()
+                director_id = director['id']
                 if director_id not in director_dup:
                     fields = {
-                        'name' : person['name'],
-                        'profile_path': person['profile_path'],
+                        'name' : director['name'],
+                        'profile_path': director['profile_path'],
+                        'another_name' : director['also_known_as'],
                     }
                     data = {
                         'model' : 'movies.Director',
@@ -204,14 +214,22 @@ def create_data(request):
         main_actors = persons['cast'][:10]
             # 영화 데이터에 넣어줄 배우 id 목록 영화마다 초기화
         movie_actor_id = []
-        for actor in main_actors:
+        for cast_actor in main_actors:
             # 해당 영화의 배우 id 목록에 넣어주지
-            movie_actor_id.append(actor['id'])
+            movie_actor_id.append(cast_actor['id'])
             # 배우 모델을 만들어줄 데이터 목록
-            if actor['id'] not in actor_dup:
+            if cast_actor['id'] not in actor_dup:
+                # 영어 제외한 다른 이름도 있는지 확인
+                request_url_actor = f"{BASE_URL}/person/{cast_actor['id']}?api_key={TMDB_API}&language=ko-KR"
+                actor = requests.get(request_url_actor).json()
+                names = []
+                for name in actor['also_known_as']:
+                    name = re.sub('[^A-Za-z0-9가-힣]', '', name)
+                    names.append(name)
                 fields = {
                         'name' : actor['name'],
                         'profile_path': actor['profile_path'],
+                        'another_name' : actor['also_known_as'],
                 }
                 data = {
                     'model' : 'movies.Actor',
@@ -245,5 +263,4 @@ def create_data(request):
     save_dir = '../back/movies/fixtures/movies_data.json'    
     with open(save_dir, "w", encoding="utf-8") as w:
         json.dump(total_data, w, indent=2, ensure_ascii=False)
-        
-    return Response('데이터 받기 완료', status=status.HTTP_200_OK)
+    return Response({'msg' : '데이터 받기 완료'}, status=status.HTTP_200_OK)

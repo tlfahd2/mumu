@@ -12,6 +12,7 @@ class Actor(models.Model):
     id = models.IntegerField(primary_key=True) # 배우 ID
     name = models.CharField(max_length=100)
     profile_path = models.TextField(null=True, blank=True)
+    another_name = models.TextField(null=True, blank=True)
 
 
 class Director(models.Model):

@@ -4,17 +4,6 @@
             <section>
                 <h1>커뮤니티</h1>
                 <h4>영화에 대한 이야기를 나누는 쉼터</h4>
-                <!-- 드랍 다운 방식 
-                    <div class="btn-group">
-                        <button type="button" class="dropdown-toggle cta" data-bs-toggle="dropdown" aria-expanded="false">
-                            게시판 종류
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><button class="dropdown-item" @click="change(1)">자유 게시판</button></li>
-                            <li><button class="dropdown-item" @click="change(2)">리뷰 게시판</button></li>
-                            <li><button class="dropdown-item" @click="change(3)">영화별 게시판</button></li> 
-                        </ul>
-                </div> -->
                 <select v-model="choice">                        
                     <option class="dropdown-item" :value="1">자유 게시판</option>
                     <option class="dropdown-item" :value="2">리뷰 게시판</option>
