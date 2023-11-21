@@ -51,6 +51,7 @@ def movie_detail(request, movie_id):
         serializer = MovieListSerializer(movie)
         return Response(serializer.data)
 
+
 # 전체 리뷰 조회 및 영화가 주어지지 않은 리뷰 생성 
 @api_view(["GET"])
 def review_list(request):
@@ -63,10 +64,9 @@ def review_list(request):
         if serializer.is_valid(raise_exception=True):
            serializer.save()
            return Response(serializer.data, status=status.HTTP_201_CREATED)
-      
 
-# 해당 영화 관련 리뷰 작성 
-@api_view(["GET"])
+
+@api_view(["GET", "POST"])
 def movie_review_list(request, movie_pk):
     movie = get_object_or_404(Movie, pk = movie_pk)
     if request.method == 'GET':
@@ -88,7 +88,7 @@ def review_detail(request, review_pk):
         return Response(serializer.data)
 
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 def review_comments(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
     if request.method == 'GET':

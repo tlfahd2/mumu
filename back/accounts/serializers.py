@@ -39,4 +39,10 @@ class CustomRegisterSerializer(RegisterSerializer):
         adapter.save_user(request, user, self)
         self.custom_signup(request, user)
         return user
-        
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'password', 'name', 'year', 'month', 'day', 'gender', 'followings', 'followers',)
+        read_only_fields = ('followings', 'like_movies', 'followers',)
