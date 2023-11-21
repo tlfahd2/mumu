@@ -1,6 +1,5 @@
 <template>
   <div>
-<<<<<<< movie-front/src/App.vue
       <header>
           <nav class="navbar fixed-top">
               <RouterLink :to="{ name: 'main' }">Main</RouterLink>
