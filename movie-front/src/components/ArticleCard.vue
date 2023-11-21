@@ -1,21 +1,27 @@
 <template>
     <div class="article">
+        <hr>
         <p>{{ article.user?.username }}</p>
+        <hr>
         <p>{{ article.title }}</p>
         <p>{{ article.content }}</p>
-        <p>작성일 :{{ article.created_at }}</p>
-        <p>수정일 :{{ article.updated_at }}</p>
+        <p>최종 수정일 :{{ article.updated_at }}</p>
+        <hr>
         <button class="btn btn-sm btn-primary" @click="updateArticle">게시글 수정</button>
         <button class="btn btn-sm btn-danger" @click="deleteArticle()">게시글 삭제</button>
         <form @submit.prevent="createComment(article.id)">
             <input type="text" placeholder="댓글을 입력해주세요" v-model="commentContent">
             <button type="submit">작성</button>
         </form>
+        <hr>
         <CommentCard
-        v-for="comment in comments"
+        v-for="comment in communityStore.comments"
         :key="comment.id"
         :comment="comment"
+        :article-id="article.id"
+        @delete-comment="deleteComment"
         />
+        <hr>
     </div>
 </template>
 
@@ -36,10 +42,9 @@ const communityStore = useCommunityStore()
 const accountStore = useAccountStore()
 const router = useRouter()
 const commentContent = ref('')
-const comments = ref([])
 
 onMounted(()=>{
-    
+    communityStore.getCommentList(props.article.id)
 })
 
 const updateArticle = () =>{
@@ -70,17 +75,22 @@ const createComment= (article_pk) => {
     }).then((response)=>{
         console.log('댓글 생성 완료')
         commentContent.value = ''
-        axios({
-            method: 'get',
-            url: `${communityStore.API_URL}/${article_pk}/comments/`,
-        })
-        .then((response) =>{
-            comments.value = response.data
-        }).catch((err)=>{
-            console.log(err)
-        })
+        communityStore.getCommentList(article_pk)
     }).catch((err)=>{
         console.log(err)
+    })
+}
+
+const deleteComment = (args) =>{
+    axios({
+        method:'delete',
+        url: `${communityStore.API_URL}/${args.articleId}/comments/${args.commentId}`,
+        headers: {
+            Authorization: `Token ${accountStore.token}`}
+    }
+    ).then((response)=>{
+        console.log(response.data)
+        communityStore.getCommentList(args.articleId)
     })
 }
 
