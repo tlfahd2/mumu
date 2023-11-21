@@ -42,6 +42,11 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    class FollowSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ('username',)
+    followers = FollowSerializer(many=True)
     class Meta:
         model = User
         fields = ('id', 'username', 'password', 'name', 'year', 'month', 'day', 'gender', 'followings', 'followers',)
