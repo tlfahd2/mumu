@@ -9,7 +9,7 @@
               <RouterLink v-if="accountStore.isLogin === false" :to="{ name: 'LogInView' }">로그인</RouterLink>
               <RouterLink v-if="accountStore.isLogin === true" @click="accountStore.logOut" :to="{ name: 'main' }">로그아웃</RouterLink>
               <RouterLink v-if="accountStore.isLogin === true" :to="{ name: 'change_password' }">비밀번호 변경</RouterLink>
-              <form class="d-flex" role="search" @submit="getSearchMovie">
+              <form class="d-flex" role="search" @submit.prevent="getSearchMovie">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="searchInput">
                 <button class="btn btn-outline-success" type="submit">search</button>
               </form>
@@ -38,7 +38,8 @@ onMounted(() => {
 const searchInput = ref('')
 
 const getSearchMovie = ()=>{
-  router.push({name : 'search', params:{keyward : searchInput.value}})
+  movieStore.getSerchResult(searchInput)
+  router.push({name : 'search', params:{keyword : searchInput.value}})
 }
 
 
