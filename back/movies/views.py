@@ -81,11 +81,6 @@ def review_list(request):
         reviews = get_list_or_404(Review)
         serializers = ReviewSerializer(reviews, many= True)
         return Response(serializers.data)
-    elif request.method == "POST":
-        serializer = ReviewSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-           serializer.save()
-           return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 # 영화별 리뷰 조회
@@ -119,24 +114,24 @@ def review_detail(request, review_pk):
       return Response(f"{review_pk}번 게시글 삭제", status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(["GET", "POST"])
-def review_comments(request, review_pk):
-    review = get_object_or_404(Review, pk=review_pk)
-    if request.method == 'GET':
-        comments = review.comment_set.all()
-        serializers = CommentSerializer(comments, many= True)
-        return Response(serializers.data)
-    elif request.method == "POST":
-        serializer = CommentSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-           serializer.save(review=review)
-           return Response(serializer.data, status=status.HTTP_201_CREATED)
+# @api_view(["GET", "POST"])
+# def review_comments(request, review_pk):
+#     review = get_object_or_404(Review, pk=review_pk)
+#     if request.method == 'GET':
+#         comments = review.comment_set.all()
+#         serializers = CommentSerializer(comments, many= True)
+#         return Response(serializers.data)
+#     elif request.method == "POST":
+#         serializer = CommentSerializer(data=request.data)
+#         if serializer.is_valid(raise_exception=True):
+#            serializer.save(review=review)
+#            return Response(serializer.data, status=status.HTTP_201_CREATED)
    
 
 
-@api_view(["GET"])
-def review_comment(request, review_pk, comment_pk):
-   pass
+# @api_view(["GET"])
+# def review_comment(request, review_pk, comment_pk):
+#    pass
 
 
 # 영화 좋아요

@@ -3,8 +3,8 @@
     <div class="main">
       <div class="body">
         <!-- Choose Form -->
-        <section class="form-container">
-          <span id="arrowClick" class="form-container__arrow" ref="form-container__arrow"><i class="fa fa-arrow-circle-left"
+        <section class="form-container" >
+          <span id="arrowClick" class="form-container__arrow" ref="form-container__arrow"><i class="bi bi-arrow-circle-left"
               aria-hidden="true"></i></span>
               <div class="choose-form" v-if="selected === 1">
                 <div class="overlay" ref="overlay"></div>
@@ -17,8 +17,9 @@
             </div>
           </div>
           <!-- Login Form -->
-
+          
           <div class="login-form--register" ref="login-form" v-if="selected === 2">
+            <i class="bi bi-arrow-left-circle" @click="goMain"></i>
             <div class="form-wrapper">
               <form @submit.prevent="logIn" style="margin-top: 200px;">
                 <label class="form-wrapper__label" for="login-username">아이디</label>
@@ -27,10 +28,14 @@
                   <div class="password_eye">
                 <label class="form-wrapper__label" for="login-password">비밀번호</label>
                 <div class="input-container">
-                <input v-if="is_looking === false" v-model.trim="password" id="login-password" class="form-wrapper__input" type="password" placeholder="Password"
+                <input v-if="is_looking === false" v-model.trim="password" id="signup-password" class="form-wrapper__input" type="password" placeholder="Password"
                   name="password" pattern=".{3,}" title="비밀번호는 8자 이상" required>
-                  <input v-if="is_looking === true" v-model.trim="password2" id="login-password" class="form-wrapper__input" type="text" placeholder="Password"
+                  <input v-if="is_looking === true" v-model.trim="password" id="signup-password" class="form-wrapper__input" type="text" placeholder="Password"
                   name="password" pattern=".{3,}" title="비밀번호는 8자 이상" required>
+                  <label class="bi_password" @click="change_looking">
+                            <i v-if="!is_looking" class="bi-eyeglasses"></i>
+                            <i v-else class="bi-sunglasses"></i>
+                        </label>
                 </div>
                 </div>
                 <button class="buttons__signup buttons__signup--login-form" ref="buttons__signup buttons__signup--login-form" type="submit" style="margin-top: 120%; text-align: center;">Login</button>
@@ -40,8 +45,9 @@
           <!-- Register Form -->
 
           <div class="login-form--register" ref="login-form--register"  v-if="selected === 3">
+            <i class="bi bi-arrow-left-circle" @click="goMain"></i>
             <div class="form-wrapper">
-              <form @submit.prevent="signUp" style="margin-top: 70px;">
+              <form @submit.prevent="signUp" style="margin-top: 40px;">
                 <label class="form-wrapper__label" for="signup-name">이름</label>
                 <input id="signup-name" class="form-wrapper__input" type="text" placeholder="name"
                   name="name" v-model.trim="name" required>
@@ -68,7 +74,7 @@
                   name="password1" pattern=".{3,}" title="비밀번호는 8자 이상" required>
                   <input v-if="is_looking === true" v-model.trim="password1" id="signup-password1" class="form-wrapper__input" type="text" placeholder="Password"
                   name="password1" pattern=".{3,}" title="비밀번호는 8자 이상" required>
-                  <label class="bi" @click="change_looking">
+                  <label class="bi_password" @click="change_looking">
                             <i v-if="!is_looking" class="bi-eyeglasses"></i>
                             <i v-else class="bi-sunglasses"></i>
                         </label>
@@ -83,12 +89,19 @@
                   name="password2" pattern=".{3,}" title="비밀번호는 8자 이상" required>
                 </div>
                 </div>
-                <label class="form-wrapper__label" for="signup-gender">성별</label>
-                <input type="radio" id="man" value="남자" v-model="gender"/>
-                <label for="man" style="color:#8dabfb; font-size: 12px; font-weight: 600;">남자</label>
-                <input type="radio" id="woman" value="여자" v-model="gender" />
-                <label for="woman" style="color:#8dabfb; font-size: 12px; font-weight: 600;">여자</label>
-                <button class="buttons__signup buttons__signup--sign-up-form" ref="buttons__signup buttons__signup--sign-up-form" type="submit" style="margin-top: 120%; text-align: center;">Sign up</button>
+                <label class="form-wrapper__label" for="signup-gender" >성별</label>
+                <div class="form-wrapper__input">
+                  <input type="radio" id="man" value="남자" v-model="gender" />
+                  <label for="man" style="color:#8dabfb; font-size: 12px; font-weight: 600;">남자</label>
+                  <input type="radio" id="woman" value="여자" v-model="gender" />
+                  <label for="woman" style="color:#8dabfb; font-size: 12px; font-weight: 600;">여자</label>
+                </div>
+                <label class="form-wrapper__label" for="signup-music">선호하는 음악 장르</label>
+                <label v-for="genre in genres" :key="genre.name" style="color:#8dabfb; font-size: 12px; font-weight: 600;" >
+                <input type="checkbox" :value="genre.name" v-model="music" @change="handleChange" >
+                  {{ genre.name }}
+                </label>
+                <button class="buttons__signup buttons__signup--sign-up-form" ref="buttons__signup buttons__signup--sign-up-form" type="submit" style="margin-top: 190%; text-align: center;">Sign up</button>
               </form>
             </div>
           </div>
@@ -117,6 +130,7 @@ const gender = ref('')
 const username = ref(null)
 const password1 = ref(null)
 const password2 = ref(null)
+const music = ref([])
 const selected = ref(1)
 
 const id = ref('')
@@ -127,7 +141,7 @@ let months = ref([])
 let days = ref([])
 
 let is_looking = ref(false)
-
+let is_checking = ref(false)
 for (let index = 2023; index > 1900;index--) {
     years.value.push(index);
 }
@@ -149,7 +163,8 @@ const signUp = function () {
         gender: gender.value,
         username: username.value,
         password1: password1.value,
-        password2: password2.value
+        password2: password2.value,
+        music: music.value
     }
     accountStore.signUp(payload)
 }
@@ -165,7 +180,35 @@ const logIn = function () {
 const change_looking = function () {
     is_looking.value = !is_looking.value
 }
-    
+
+const genres = ref([
+  {id: 1, name: '레게'}, 
+  {id: 2, name: '힙합'}, 
+  {id: 3, name: '발라드'}, 
+  {id: 4, name: '락'},
+  {id: 5, name: '케이팝'},
+  {id: 6, name: '팝'},
+  {id: 7, name: 'R&B'}, 
+  {id: 8, name: '클럽음악'},
+  {id: 9, name: '클래식'},
+  {id: 10, name: '요들'}, 
+  {id: 11, name: '민요'},
+  {id: 12, name: '트로트'}, 
+  {id: 13, name: '재즈'}
+])
+
+
+const handleChange = function() {
+  console.log(music.value)
+      // 최대 2개까지만 선택되도록 제한
+      if (music.value.length > 2) {
+        music.value.pop()
+        alert('최대 2개만 선택할 수 있어요!')
+      }
+}
+
+
+
 /* ===========================
     Elements Selectors
 ============================ */
@@ -264,6 +307,9 @@ const props = ref({
       selected.value = 2
     }
 
+    const goMain = function () {
+      selected.value = 1
+    }
   // document.getElementById("arrowClick").onclick = function (){
 
   //   const properties = [props.leftM120, props.opacity1, props.opacity1, props.opacity1, props.opacity1, `${props.opacity0} ${props.trnsDelay0} ${props.zIndex0}`, `${props.opacity0} ${props.trnsDelay0} ${props.zIndex0}`]
@@ -501,6 +547,7 @@ const props = ref({
   width: 250px;
   height: 250px;
   display: block;
+  position: relative;
 }
 
 .form-wrapper__label{
@@ -694,11 +741,20 @@ const props = ref({
   padding-right: 30px; 
 }
 
-.bi {
+.bi_password {
   position: absolute;
   top: 50%;
   right: 10px; 
   transform: translateY(-50%);
   cursor: pointer;
 }
+
+  .bi-arrow-left-circle {
+    position: absolute;
+    top: 10px; /* 원하는 위치로 조절할 수 있습니다. */
+    left: 10px; /* 원하는 위치로 조절할 수 있습니다. */
+    font-size: 24px; /* 원하는 크기로 조절할 수 있습니다. */
+    cursor: pointer;
+    color: #8dabfb;
+  }
 </style>
