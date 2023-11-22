@@ -1,9 +1,11 @@
 <template>
-    <div class="poster" @click="moveDetail">
-        <img :src="posterUrl" class="img-thumbnail" :alt="movie.title">
-        {{ movie.popularity }}
-        {{ movie.release_date }}
-    </div>
+    <article>
+        <div class="poster" @click="moveDetail">
+            <img :src="posterUrl" class="img-fluid img-thumbnail" :alt="movie.title">
+            {{ movie.popularity }}
+            {{ movie.release_date }}
+        </div>
+    </article>
 </template>
 
 <script setup>
@@ -29,8 +31,17 @@ const moveDetail = () => {
 
 <style scoped>
 .poster{
-    display: inline-block;
+    position: relative;
     width: 200px;
     margin: 20px;
+    transition: 0.2s ease-in-out;
+}
+.img-thumbnail{
+    height: 298px;
+}
+.poster :hover {
+    transform: perspective(1500px) rotateY(30deg);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
 }
 </style>

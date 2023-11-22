@@ -1,18 +1,16 @@
 <template>
     <main class="container main">
-        <div>
-            <h1>영화 상세</h1>
+        <div class="movie-info">
             <MovieDetailCard
             :movie="movie"
             />
             <section>
                 <div class="credits">
-                    <div class="row row-cols-1">
-                        <p>감독</p>
+                    <p class="tag">감독/출연</p>
+                    <div>
                         <PersonCard
                         :person="movie.director"
                         />
-                        <p>주연 배우</p>
                         <PersonCard
                         v-for="actor in movie.actors"
                         :key="actor.id"
@@ -58,10 +56,7 @@ axios({
 }
 .credits{
     display: flex;
+    border:1px solid
 }
-.personContainer{
-    display: flex;
-    overflow-x: auto;
-    white-space: nowrap;
-}
+
 </style>

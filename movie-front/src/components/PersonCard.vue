@@ -1,5 +1,5 @@
 <template>
-    <div class="col card">
+    <div class="card">
         <img v-if="person?.profile_path" class="card-img-top" :src="movieStore.BASE_IMAGE_URL+person?.profile_path" :alt="person?.name">
         <img v-else class="card-img-top" src="https://yozm.wishket.com/static/img/default_avatar.png" alt="">
         <div class="card-body">
@@ -25,7 +25,8 @@ const props = defineProps({
 
 <style scoped>
 .card{
-    width: 200px;
+    display: inline-block;
+    width: 150px;
     border-radius: 12px;
     text-align: center;
     margin:5px;
