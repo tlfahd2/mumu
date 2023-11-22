@@ -54,7 +54,7 @@ getUser()
 const like = function () {
     axios({
       method: 'post',
-      url: `${movieStore.API_URL}/like/${review_id}/${accountStore.user_pk}/`,
+      url: `${movieStore.API_URL}/like_reviews/${review_id}/${accountStore.user_pk}/`,
       headers: {
         Authorization: `Token ${accountStore.token}`
       }
@@ -71,7 +71,7 @@ const like = function () {
 const hate = function () {
     axios({
       method: 'post',
-      url: `${movieStore.API_URL}/hate/${review_id}/${accountStore.user_pk}/`,
+      url: `${movieStore.API_URL}/hate_reviews/${review_id}/${accountStore.user_pk}/`,
       headers: {
         Authorization: `Token ${accountStore.token}`
       }

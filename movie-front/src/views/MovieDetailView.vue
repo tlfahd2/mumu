@@ -76,7 +76,7 @@ getUser()
 const like = function () {
     axios({
       method: 'post',
-      url: `${movieStore.API_URL}/like/${movie_id}/${accountStore.user_pk}/`,
+      url: `${movieStore.API_URL}/like_movies/${movie_id}/${accountStore.user_pk}/`,
       headers: {
         Authorization: `Token ${accountStore.token}`
       }
