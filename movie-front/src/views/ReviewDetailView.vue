@@ -16,14 +16,14 @@ import { useAccountStore } from '../stores/account'
 import { useMovieStore } from '../stores/movie'
 import { useCommunityStore } from '../stores/community'
 import axios from 'axios'
-import ArticleCard from '../components/ArticleCard.vue'
+import ReviewCard from '../components/ReviewCard.vue'
 
 const movieStore = useMovieStore()
 const route = useRoute()
-const review_id = route.params.reivew_id
+const review_id = route.params.review_id
 
 onMounted(()=>{
-    movieStore.getReivew(review_id)
+    movieStore.getReview(review_id)
 })
 
 

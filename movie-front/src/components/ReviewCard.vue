@@ -26,7 +26,7 @@ const props = defineProps({
     review:Object
 })
 
-const communityStore = useCommunityStore()
+const movieStore = useMovieStore()
 const accountStore = useAccountStore()
 const router = useRouter()
 const commentContent = ref('')
@@ -38,7 +38,7 @@ const updateReview = () =>{
 const deleteReview = ()=>{
     axios({
         method:'delete',
-        url: `${communityStore.API_URL}/${props.review.id}/`,
+        url: `${movieStore.API_URL}/reviews/${props.review.id}/`,
         headers: {
             Authorization: `Token ${accountStore.token}`}
     }

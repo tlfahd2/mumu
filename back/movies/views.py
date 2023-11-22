@@ -94,7 +94,7 @@ def movie_review_list(request, movie_pk):
     elif request.method == "POST":
         serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-           serializer.save(movie=movie)
+           serializer.save(user=request.user, movie=movie)
            return Response(serializer.data, status=status.HTTP_201_CREATED)
       
 

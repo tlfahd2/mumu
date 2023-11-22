@@ -66,7 +66,7 @@ export const useMovieStore = defineStore('movie', () => {
     const getReview = (review_id) =>{
       axios({
           method:'get',
-          url:`${API_URL}/${review_id}/`
+          url:`${API_URL}/reviews/${review_id}/`
       }).then((response)=>{
           review.value = response.data
       }).catch((error)=>{

@@ -1,9 +1,8 @@
 <template>
     <main class="main">
         <div>
+            <img :src="movieStore.BASE_IMAGE_URL+movie.poster_path" :alt="movie.title">
             <form @submit.prevent="createReview">
-                <label for="title">영화 제목</label>
-                <input type="text" id="title" v-model.trim="title">
                 <label for="content">내용</label>
                 <textarea name="내용" id="content" cols="30" rows="10" v-model.trim="content"></textarea>
                 <select v-model="rank">
@@ -26,19 +25,21 @@ import axios from 'axios'
 const movieStore = useMovieStore()
 const accountStore = useAccountStore()
 const router = useRouter()
+const route = useRoute()
 
 const title = ref('')
 const content = ref('')
 const rank = ref('')
 const scores = ref([])
+const movie_id = route.params.movie_id
+const movie = ref({})
 
 
 const createReview = () =>{
         axios({
             method: 'post',
-            url: `${movieStore.API_URL}/reviews/`,
+            url: `${movieStore.API_URL}/${movie_id}/reviews/`,
             data : {
-                movie : title.value,
                 content : content.value,
                 rank : rank.value
             },
@@ -54,6 +55,16 @@ const createReview = () =>{
 for (let index = 10; index > -1;index--) {
     scores.value.push(index);
 }
+
+axios({
+        method:'get',
+        url : `${movieStore.API_URL}/detail/${movie_id}`
+    }).then((response)=>{
+        movie.value = response.data
+    }).catch((error)=>{
+        console.log(error)
+    })
+
 </script>
 
 <style scoped>

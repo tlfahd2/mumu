@@ -15,6 +15,7 @@
             v-for="actor in movie.actors"
             :person="actor"
             />
+            <button @click="createReview">리뷰 생성</button>
         </div>
     </main>
 </template>
@@ -28,6 +29,7 @@ import axios from 'axios'
 
 import MovieDetailCard from '../components/MovieDetailCard.vue'
 import PersonCard from '../components/PersonCard.vue'
+import router from '../router'
 
 
 const movieStore = useMovieStore()
@@ -46,6 +48,9 @@ axios({
     })
 
 
+const createReview = function () {
+    router.push({name: 'createReview', params: {movie_id: movie_id}})
+}
 
 
 
