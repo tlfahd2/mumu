@@ -36,7 +36,7 @@ onBeforeRouteUpdate((to, from) => {
     movieStore.getSerchResult(keyword)
     axios({
     method : 'get',
-    url : `${movieStore.API_URL}/search/${keyward}/`,
+    url : `${movieStore.API_URL}/search/${keyword}/`,
 
     }).then((response)=>{
         console.log(response.data)
