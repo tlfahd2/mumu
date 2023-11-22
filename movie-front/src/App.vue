@@ -1,6 +1,7 @@
 <template>
   <div>
       <header>
+        <div>
           <nav class="navbar fixed-top">
               <RouterLink :to="{ name: 'main' }">Main</RouterLink>
               <RouterLink :to="{ name: 'communitymain' }">커뮤니티</RouterLink>
@@ -8,11 +9,12 @@
               <RouterLink v-if="accountStore.isLogin === false" :to="{ name: 'LogInView' }">로그인</RouterLink>
               <RouterLink v-if="accountStore.isLogin === true" @click="accountStore.logOut" :to="{ name: 'main' }">로그아웃</RouterLink>
               <RouterLink v-if="accountStore.isLogin === true" :to="{ name: 'change_password' }">비밀번호 변경</RouterLink>
-              <form class="d-flex" role="search" @submit.prevent="getSearchMovie">
+              <form class="d-flex" role="search" @submit="getSearchMovie">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="searchInput">
-                <button class="btn btn-outline-success" type="submit">검색</button>
+                <button class="btn btn-outline-success" type="submit">search</button>
               </form>
           </nav>
+        </div>
       </header>
   <RouterView/>
   </div>
@@ -28,6 +30,7 @@ import axios from 'axios'
 
 const movieStore = useMovieStore()
 const accountStore = useAccountStore()
+const router = useRouter()
 
 onMounted(() => {
   movieStore.getMovieList(1)
@@ -35,14 +38,7 @@ onMounted(() => {
 const searchInput = ref('')
 
 const getSearchMovie = ()=>{
-  axios({
-    method : 'get',
-    url : `${movieStore.API_URL}/search/${searchInput.value}/`,
-    headers: {
-            Authorization: `Token ${accountStore.token}`}
-  }).then((response)=>{
-    console.log(response.data)
-  })
+  router.push({name : 'search', params:{keyward : searchInput.value}})
 }
 
 
@@ -52,4 +48,9 @@ const getSearchMovie = ()=>{
 .main{
   padding-top: 5.8rem;
 }
+.navbar{
+  padding-left: 5rem;
+  padding-right: 5rem;
+}
+
 </style>
