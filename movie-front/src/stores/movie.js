@@ -2,7 +2,6 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-
 export const useMovieStore = defineStore('movie', () => {
     const API_URL = 'http://127.0.0.1:8000/api/v1/movies'
     const BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500"

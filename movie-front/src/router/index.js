@@ -34,6 +34,11 @@ const router = createRouter({
       component: MainView
     },
     {
+      path: '/search/:keyward',
+      name: 'search',
+      component: () => import('../views/SearchView.vue')
+    },
+    {
       path: '/moviedetail/:movie_id',
       name: 'moviedetail',
       component: () => import('../views/MovieDetailView.vue')

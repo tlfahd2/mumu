@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 # 인증된 사람들만 가능하도록
 from rest_framework.permissions import IsAuthenticated
-from .models import Movie, Genre, Review, Comment
+from .models import Movie, Genre, Review, Comment, Actor, Director
 from .serializers import MovieListSerializer, GenreSerializer, ReviewSerializer, CommentSerializer
 from accounts.models import User
 
@@ -40,7 +40,22 @@ def movie_list(request, sort_num):
 
 @api_view(["GET"])
 def search_movie(request, keyward):
-    movies = Movie.objects.filter(title__icontains=keyward) | Movie.objects.filter(overview__icontains=keyward)
+    # 검색한 키워드가 감독, 배우, 장르에 포함 되어 있는지 확인
+    actors = Actor.objects.filter(name__icontains=keyward) | Actor.objects.filter(another_name__icontains=keyward)
+    directors = Director.objects.filter(name__icontains=keyward) | Director.objects.filter(another_name__icontains=keyward)
+    genres = Genre.objects.filter(name__icontains=keyward) 
+    # 제목에 키워드가 있는 영화
+    movies = Movie.objects.filter(title__icontains=keyward)
+    # 내용에 키워드가 포함된 영화 추가해주기
+    movies = movies.union(Movie.objects.filter(overview__icontains=keyward))
+    # 검색한 단어가 포함된 배우들의 영화 정보 저장
+    for actor in actors:
+        movies = movies.union(actor.movie_set.all())
+    for director in directors:
+        movies = movies.union(director.movie_set.all())
+    for genre in genres:
+        movies = movies.union(genre.movie_set.all())
+    movies = movies.order_by('-popularity')
     serializers = MovieListSerializer(movies, many=True)
     return Response(serializers.data)
              
@@ -198,7 +213,7 @@ def create_data(request):
         upcoming = requests.get(request_url_upcoming).json()
         movies += upcoming['results']
     # 인기 영화 중 상위 10000개 데이터 가져오기 1page당 20개의 데이터
-    for page in range(1, 2):
+    for page in range(1, 50):
         request_url_movies = f"{BASE_URL}/movie/popular?api_key={TMDB_API}&language=ko-KR&page={page}"
         popular = requests.get(request_url_movies).json()
         movies += popular['results']
@@ -234,10 +249,16 @@ def create_data(request):
                 director = requests.get(request_url_person).json()
                 director_id = director['id']
                 if director_id not in director_dup:
+                    anoter_name = ''
+                    for na in director['also_known_as']:
+                        name = re.sub('[^가-힣\s]', '', na).strip()
+                        if name:
+                            anoter_name = name
+                            break
                     fields = {
                         'name' : director['name'],
                         'profile_path': director['profile_path'],
-                        'another_name' : director['also_known_as'],
+                        'another_name' : anoter_name,
                     }
                     data = {
                         'model' : 'movies.Director',
@@ -259,14 +280,16 @@ def create_data(request):
                 # 영어 제외한 다른 이름도 있는지 확인
                 request_url_actor = f"{BASE_URL}/person/{cast_actor['id']}?api_key={TMDB_API}&language=ko-KR"
                 actor = requests.get(request_url_actor).json()
-                names = []
-                for name in actor['also_known_as']:
-                    name = re.sub('[^A-Za-z0-9가-힣]', '', name)
-                    names.append(name)
+                anoter_name=''
+                for na in actor['also_known_as']:
+                    name = re.sub('[^가-힣\s]', '', na).strip()
+                    if name:
+                        anoter_name = name
+                        break
                 fields = {
                         'name' : actor['name'],
                         'profile_path': actor['profile_path'],
-                        'another_name' : actor['also_known_as'],
+                        'another_name' : anoter_name,
                 }
                 data = {
                     'model' : 'movies.Actor',
