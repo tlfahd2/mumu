@@ -4,6 +4,14 @@ from allauth.account.adapter import DefaultAccountAdapter
 
 # Create your models here.
 class User(AbstractUser):
+    music_as_text = models.TextField()
+    
+    def set_music(self, music_list):
+        self.music_as_text = ','.join(map(str, music_list))
+    
+    def get_music(self):
+        return self.music_as_text.split(',')
+    
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=254, blank=True, null=True)
     name = models.CharField(max_length=50)
@@ -11,7 +19,7 @@ class User(AbstractUser):
     month = models.IntegerField(blank=True, null=True)
     day = models.IntegerField(blank=True, null=True)
     gender = models.CharField(max_length=5)
-    music = models.TextField()
+    music = models.CharField(max_length=50)
     
     followers = models.ManyToManyField('self', symmetrical=False, related_name='followings')
     

@@ -121,6 +121,7 @@ import { useMovieStore } from '../stores/movie'
 import axios from 'axios'
 
 const accountStore = useAccountStore()
+const router = useRouter()
 
 const name = ref(null)
 const year = ref(null)
@@ -132,7 +133,6 @@ const password1 = ref(null)
 const password2 = ref(null)
 const music = ref([])
 const selected = ref(1)
-
 const id = ref('')
 const password = ref('')
 
@@ -141,7 +141,7 @@ let months = ref([])
 let days = ref([])
 
 let is_looking = ref(false)
-let is_checking = ref(false)
+
 for (let index = 2023; index > 1900;index--) {
     years.value.push(index);
 }
@@ -155,6 +155,7 @@ for (let index = 1; index < 32;index++) {
 }
 
 const signUp = function () {
+  const arrayAsString = JSON.stringify(music.value)
     const payload = {
         name: name.value,
         year: year.value,
@@ -164,9 +165,10 @@ const signUp = function () {
         username: username.value,
         password1: password1.value,
         password2: password2.value,
-        music: music.value
+        music: arrayAsString
     }
     accountStore.signUp(payload)
+    router.push({name: 'main'})
 }
 
 const logIn = function () {
@@ -199,7 +201,6 @@ const genres = ref([
 
 
 const handleChange = function() {
-  console.log(music.value)
       // 최대 2개까지만 선택되도록 제한
       if (music.value.length > 2) {
         music.value.pop()
@@ -273,8 +274,6 @@ const props = ref({
 ============================ */
 
   const handleSignUp = function () {
-    console.log(2)
-
     const styles = [
       { left: props.value.left, opacity: props.value.opacity0 },
       { opacity: props.value.opacity0 },
@@ -284,7 +283,6 @@ const props = ref({
       { opacity: props.value.opacity0 },
       { transition: `${props.value.opacity1} ${props.value.trnsDelay} ${props.value.zIndex}` },
     ]
-      console.log(styles)
       // handleTransition(elms, styles)
       selected.value = 3
     }
