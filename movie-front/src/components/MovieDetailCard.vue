@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div>
         <img :src="movieStore.BASE_IMAGE_URL+movie.poster_path" :alt="movie.title">
         <p v-if="movie.adult">성인</p>
         <p v-for="genre in movie.genres">{{ genre.name }}</p>
@@ -7,6 +7,8 @@
         <p>{{ movie.runtime }}분</p>
         <p>{{ movie.title }}</p>
         <p>{{ movie.overview }}</p>
+        <button class="btn btn-primary">리뷰 쓰기</button>
+        <button v-if="movie.trailer" class="btn btn-secondary">예고편 보기</button>
     </div>
 </template>
 

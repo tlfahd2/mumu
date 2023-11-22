@@ -1,20 +1,26 @@
 <template>
-    <main class="main">
+    <main class="container main">
         <div>
             <h1>영화 상세</h1>
             <MovieDetailCard
             :movie="movie"
             />
-            <p>감독</p>
-            <PersonCard
-            :person="movie.director"
-            />
-            <br>
-            <p>주연 배우</p>
-            <PersonCard
-            v-for="actor in movie.actors"
-            :person="actor"
-            />
+            <section>
+                <div class="credits">
+                    <div class="row row-cols-1">
+                        <p>감독</p>
+                        <PersonCard
+                        :person="movie.director"
+                        />
+                        <p>주연 배우</p>
+                        <PersonCard
+                        v-for="actor in movie.actors"
+                        :key="actor.id"
+                        :person="actor"
+                        />
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 </template>
@@ -44,15 +50,18 @@ axios({
     }).catch((error)=>{
         console.log(error)
     })
-
-
-
-
-
 </script>
 
 <style scoped>
 .main{
     padding-top: 5.8rem;
+}
+.credits{
+    display: flex;
+}
+.personContainer{
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 </style>

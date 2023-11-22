@@ -31,8 +31,7 @@ onMounted(()=>{
     axios({
     method : 'get',
     url : `${movieStore.API_URL}/search/${keyward}/`,
-    headers: {
-            Authorization: `Token ${accountStore.token}`}
+
     }).then((response)=>{
         console.log(response.data)
         movies.value = response.data
