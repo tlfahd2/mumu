@@ -60,7 +60,7 @@ def movie_detail(request, movie_id):
 
 
 # 전체 리뷰 조회 및 영화가 주어지지 않은 리뷰 생성 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 def review_list(request):
     if request.method == 'GET':
         reviews = get_list_or_404(Review)
@@ -73,9 +73,10 @@ def review_list(request):
            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+# 영화별 리뷰 조회
 @api_view(["GET", "POST"])
 def movie_review_list(request, movie_pk):
-    movie = get_object_or_404(Movie, pk = movie_pk)
+    movie = get_object_or_404(Movie, pk=movie_pk)
     if request.method == 'GET':
         reviews = movie.review_set.all()
         serializers = ReviewSerializer(reviews, many= True)
@@ -87,12 +88,20 @@ def movie_review_list(request, movie_pk):
            return Response(serializer.data, status=status.HTTP_201_CREATED)
       
 
-@api_view(["GET"])
+@api_view(["GET", "PUT", "DELETE"])
 def review_detail(request, review_pk):
-    if request.method == "GET":
-        review = get_object_or_404(Review, pk=review_pk)
-        serializer = ReviewSerializer(review)
-        return Response(serializer.data)
+   review = get_object_or_404(Review, pk=review_pk)
+   if request.method == 'GET':
+      serializer = ReviewSerializer(review)
+      return Response(serializer.data)
+   elif request.method == "PUT":
+      serializer = ReviewSerializer(review, data=request.data)
+      if serializer.is_valid(raise_exception=True):
+         serializer.save()
+         return Response(serializer.data)
+   elif request.method == 'DELETE':
+      review.delete()
+      return Response(f"{review_pk}번 게시글 삭제", status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(["GET", "POST"])
@@ -127,6 +136,34 @@ def like_movies(request, movie_pk, user_pk):
         movie.like_users.add(user)
         movie_like = True
     return Response(movie_like)
+
+
+# 리뷰 좋아요
+@api_view(["POST"])
+def like_reviews(request, review_pk, user_pk):
+    review = get_object_or_404(Review, pk=review_pk)
+    user = get_object_or_404(User, pk=user_pk)
+    if review.like_users.filter(pk=user.pk).exists():
+        review.like_users.remove(user)
+        review_like = False
+    else:
+        review.like_users.add(user)
+        review_like = True
+    return Response(review_like)
+
+
+# 리뷰 싫어요
+@api_view(["POST"])
+def hate_reviews(request, review_pk, user_pk):
+    review = get_object_or_404(Review, pk=review_pk)
+    user = get_object_or_404(User, pk=user_pk)
+    if review.hate_users.filter(pk=user.pk).exists():
+        review.hate_users.remove(user)
+        review_hate = False
+    else:
+        review.hate_users.add(user)
+        review_hate = True
+    return Response(review_hate)
 
 
 # 영화 관련 데이터를 받아와서 제이슨으로 저장 하는 함수

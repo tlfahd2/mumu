@@ -1,6 +1,9 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 export const useMovieStore = defineStore('movie', () => {
     const API_URL = 'http://127.0.0.1:8000/api/v1/movies'
@@ -9,7 +12,9 @@ export const useMovieStore = defineStore('movie', () => {
     const movies = ref([])
     const genres = ref([])
     const reviews = ref([])
-    
+    const review = ref([])
+    const movie_reviews = ref([])
+
     const getMovieList=(sort_num)=>{
         axios({
             method: 'get',
@@ -34,17 +39,41 @@ export const useMovieStore = defineStore('movie', () => {
         console.log(error)
        })
     }
-    const getReviewList = (choice_num) =>{
-      if (choice_num===2){
-        axios({
-          method: 'get',
-          url: `${API_URL}/reviews/`
-        }).then((response)=>{
-            reviews.value = response.data
-        }).catch((err)=>{
-            console.log(err)
-        })
-      }
+
+    const getReviewList = () =>{
+      axios({
+        method: 'get',
+        url: `${API_URL}/reviews/`
+      }).then((response)=>{
+          reviews.value = response.data
+      }).catch((err)=>{
+          console.log(err)
+      }) 
+    }
+
+    const getMovieReviewList = () => {
+      axios({
+        method: 'get',
+        url: `${API_URL}/${route.params.movie_id}/reviews/`
+      }).then((response)=>{
+          movie_reviews.value = response.data
+      }).catch((err)=>{
+          console.log(err)
+      }) 
+    }
+
+    const getReview = (review_id) =>{
+      axios({
+          method:'get',
+          url:`${API_URL}/${review_id}/`
+      }).then((response)=>{
+          ewc.value = response.data
+      }).catch((error)=>{
+          console.log(error)
+      })
+    }
+
+    
       // else if (choice_num === 2){
       //   axios({
       //     method: 'get',
@@ -55,8 +84,7 @@ export const useMovieStore = defineStore('movie', () => {
       //       console.log(err)
       //   })
       // }
-  }
- 
 
-  return { movies, genres, API_URL, BASE_IMAGE_URL, getMovieList, getGenreList, getMovieList }
+
+  return { movies, genres, reviews, review, movie_reviews, API_URL, BASE_IMAGE_URL, getMovieList, getGenreList, getReviewList, getReview, getMovieReviewList }
 }, { persist:true })
