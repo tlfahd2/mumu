@@ -64,7 +64,7 @@ const router = createRouter({
       component : () => import('../views/ArticleDetailView.vue')
     },
     {
-      path:'/createReview',
+      path:'/:movie_id/createReview',
       name:'createReview',
       component : () => import('../views/ReviewCreateView.vue')
     },

@@ -11,6 +11,7 @@ class User(AbstractUser):
     month = models.IntegerField(blank=True, null=True)
     day = models.IntegerField(blank=True, null=True)
     gender = models.CharField(max_length=5)
+    music = models.TextField()
     
     followers = models.ManyToManyField('self', symmetrical=False, related_name='followings')
     
@@ -40,6 +41,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         first_name = data.get("first_name")
         last_name = data.get("last_name")
         movie_user = data.get("movie_users")
+        music = data.get("music")
         
         user_email(user, email)
         user_username(user, username)
@@ -57,6 +59,8 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             user.day = day
         if gender:
             user.gender = gender
+        if music:
+            user.music = music
         if movie_user:
             movie_users = user.movie_users.split(',')
             movie_users.append(movie_user)

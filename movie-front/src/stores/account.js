@@ -13,13 +13,13 @@ export const useAccountStore = defineStore('account', () => {
   const following = ref('')
 
   const signUp = function (payload) {
-    const { name, year, month, day, gender, username, password1, password2 } = payload
+    const { name, year, month, day, gender, username, password1, password2, music } = payload
 
     axios({
       method: 'post',
       url: `${API_URL}/accounts/signup/`,
       data: {
-        name, year, month, day, gender, username, password1, password2
+        name, year, month, day, gender, username, password1, password2, music
       }
     })
       .then(res => {

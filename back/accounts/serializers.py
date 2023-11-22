@@ -10,6 +10,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     month = serializers.IntegerField()
     day = serializers.IntegerField()
     gender = serializers.CharField(max_length=5)
+    music = serializers.CharField(max_length=50)
     
     class Meta:
         model = User
@@ -25,6 +26,7 @@ class CustomRegisterSerializer(RegisterSerializer):
             'month': self.validated_data.get('month'),
             'day': self.validated_data.get('day'),
             'gender': self.validated_data.get('gender'),
+            'music': self.validated_data.get('music'),
         }
         
     def save(self, request):
@@ -49,5 +51,5 @@ class UserSerializer(serializers.ModelSerializer):
     followers = FollowSerializer(many=True)
     class Meta:
         model = User
-        fields = ('id', 'username', 'password', 'name', 'year', 'month', 'day', 'gender', 'followings', 'followers',)
-        read_only_fields = ('followings', 'like_movies', 'followers', 'hate_movies', 'hate_reviews',)
+        fields = ('id', 'username', 'password', 'name', 'year', 'month', 'day', 'gender', 'followings', 'followers', 'music',)
+        read_only_fields = ('followings', 'like_movies', 'followers', 'like_reviews', 'hate_reviews',)
