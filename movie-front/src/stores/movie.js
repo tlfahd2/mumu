@@ -1,16 +1,20 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { useAccountStore } from '../stores/account'
 import axios from 'axios'
+
 
 export const useMovieStore = defineStore('movie', () => {
     const API_URL = 'http://127.0.0.1:8000/api/v1/movies'
     const BASE_IMAGE_URL = "https://image.tmdb.org/t/p/w500"
+    const accountStore = useAccountStore()
 
     const movies = ref([])
     const genres = ref([])
     const reviews = ref([])
     const review = ref([])
     const movie_reviews = ref([])
+    const result = ref([])
 
     const getMovieList=(sort_num)=>{
         axios({
@@ -70,6 +74,17 @@ export const useMovieStore = defineStore('movie', () => {
       })
     }
 
+
+    const getSerchResult = (keyword) => {
+      axios({
+      method : 'get',
+      url : `${API_URL}/search/${keyword}/`,
+      headers: {
+              Authorization: `Token ${accountStore.token}`}
+      }).then((response)=>{
+          result.value = response.data
+      })
+    }
     
       // else if (choice_num === 2){
       //   axios({
@@ -83,5 +98,5 @@ export const useMovieStore = defineStore('movie', () => {
       // }
 
 
-  return { movies, genres, reviews, review, movie_reviews, API_URL, BASE_IMAGE_URL, getMovieList, getGenreList, getReviewList, getReview, getMovieReviewList }
+  return { movies, genres, reviews, review, movie_reviews, result, API_URL, BASE_IMAGE_URL, getMovieList, getGenreList, getReviewList, getReview, getMovieReviewList, getSerchResult }
 }, { persist:true })

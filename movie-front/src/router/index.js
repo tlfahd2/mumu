@@ -34,7 +34,7 @@ const router = createRouter({
       component: MainView
     },
     {
-      path: '/search/:keyward',
+      path: '/search/:keyword',
       name: 'search',
       component: () => import('../views/SearchView.vue')
     },
