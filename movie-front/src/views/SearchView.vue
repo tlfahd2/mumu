@@ -34,6 +34,14 @@ onMounted(()=>{
 onBeforeRouteUpdate((to, from) => {
     keyword = to.params.keyword
     movieStore.getSerchResult(keyword)
+    axios({
+    method : 'get',
+    url : `${movieStore.API_URL}/search/${keyward}/`,
+
+    }).then((response)=>{
+        console.log(response.data)
+        movies.value = response.data
+    })
 })
 </script>
 

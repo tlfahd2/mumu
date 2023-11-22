@@ -12,13 +12,13 @@ class GenreSerializer(serializers.ModelSerializer):
 class DirectorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Director
-        fields = ('name', 'profile_path',)
+        fields = ('name', 'profile_path','another_name')
 
 
 class ActorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actor
-        fields = ('name', 'profile_path',)
+        fields = ('name', 'profile_path','another_name')
 
 
 # class CharacterSerializer(serializers.ModelSerializer):

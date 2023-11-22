@@ -27,7 +27,7 @@
                 <div
                 v-if="choice===2"
                 v-for="review in movieStore?.reviews"
-                :key="reivew.id"
+                :key="review.id"
                 @click="moveReviewDetail(review.id)"
                 >
                 <img :src="movieStore.BASE_IMAGE_URL+review.movie.poster_path" :alt="review.movie.title">
