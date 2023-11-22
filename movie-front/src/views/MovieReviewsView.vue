@@ -29,7 +29,7 @@ const movieStore = useMovieStore()
 const movie_id = ref(route.params.movie_id)
 // 영화별 리뷰 전체 목록
 onMounted(() => {
-    movieStore.getMovieReviewList()
+    movieStore.getMovieReviewList(route.params.movie_id)
 })
 
 const moveDetail = (review_id)=>{

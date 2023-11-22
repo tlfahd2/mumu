@@ -1,9 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { useRoute } from 'vue-router'
 
-const route = useRoute()
 
 export const useMovieStore = defineStore('movie', () => {
     const API_URL = 'http://127.0.0.1:8000/api/v1/movies'
@@ -51,10 +49,10 @@ export const useMovieStore = defineStore('movie', () => {
       }) 
     }
 
-    const getMovieReviewList = () => {
+    const getMovieReviewList = (movie_id) => {
       axios({
         method: 'get',
-        url: `${API_URL}/${route.params.movie_id}/reviews/`
+        url: `${API_URL}/${movie_id}/reviews/`
       }).then((response)=>{
           movie_reviews.value = response.data
       }).catch((err)=>{
@@ -67,7 +65,7 @@ export const useMovieStore = defineStore('movie', () => {
           method:'get',
           url:`${API_URL}/${review_id}/`
       }).then((response)=>{
-          ewc.value = response.data
+          review.value = response.data
       }).catch((error)=>{
           console.log(error)
       })

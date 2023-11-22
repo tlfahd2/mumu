@@ -87,6 +87,11 @@ const router = createRouter({
       path: `/:username/follow`,
       name: 'follow',
       component: () => import('../components/FollowListModal.vue')
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: () => import('../views/signup.vue')
     }
   ]
 })
