@@ -12,7 +12,7 @@
                     <p>{{ movie.runtime }}분</p>
                     <p>{{ movie.overview }}</p>
                     <ReviewCreateView :movie="movie" />
-                    <button @click="like" v-if="isLike === true">좋아요 취소</button>
+                    <button @click="like" v-if="accountStore.isLike === true">좋아요 취소</button>
                     <button @click="like" v-else>좋아요</button>
                     <TrailerModal
                     v-if="movie.trailer"
@@ -40,7 +40,6 @@ const router = useRouter()
 const movie_id = route.params.movie_id
 
 const user = ref({})
-const isLike = ref('')
 
 const props = defineProps({
     movie:Object
@@ -60,8 +59,8 @@ const like = function () {
       }
     })
     .then((res) => {
-        getUser()
-        isLike.value = res.data
+      accountStore.isLike = !accountStore.isLike
+      accountStore.getUser(accountStore.user_username)
     })
     .catch((err) => {
       console.log(err)
