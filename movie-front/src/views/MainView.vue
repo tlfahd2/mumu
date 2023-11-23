@@ -23,25 +23,26 @@
             </div>
             <div class="movie-list">
                 <MovieCard
-                v-for="movie in movieStore.movies"
+                v-for="movie in data"
                 :key="movie.id"
                 :movie="movie"
                 />
-                <infinite-loding
+                <infinite-loading
                 @infinite="loadMoreData"
                 ref="infiniteLoading"
                 spinner="bubbles"
                 v-if="!AllDataLoaded"
                 >
                     <div slot="no-more">No more data</div>
-                </infinite-loding>
+                </infinite-loading>
+
             </div>
         </div>
     </main>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAccountStore } from '../stores/account'
 import { useMovieStore } from '../stores/movie'
@@ -51,41 +52,51 @@ import InfiniteLoading from 'v3-infinite-loading'
 import "v3-infinite-loading/lib/style.css";
 
 const movieStore = useMovieStore()
+const accountStore = useAccountStore()
 const router = useRouter()
-const data =ref([]);
-const currentPage =ref(1);
+const data =ref([])
+const currentPage = ref(2)
 const pageSize = 10;
 const AllDataLoaded = ref(false)
+const sort_num = ref(1)
 
 onMounted(()=>{
-    movieStore.getMovieList(1)
+    movieStore.getMovieList(1, 1)
     movieStore.getGenreList()
 })
 
 const sortMovie= (number) =>{
-    movieStore.getMovieList(number)
+    sort_num.value = number
+    currentPage.value = 2
+    data.value = []
+    // 다시 눌렀을 때는 새로운 데이터를 또 불러오야 함
+    AllDataLoaded.value = false
+    movieStore.getMovieList(number, 1)
 }
 
+
+// 무한 스크롤 함수
 const loadMoreData = async ($state) => {
+    console.log('데이터 더줘')
       try {
-        // Simulate an API call to fetch more data
-        // Replace this with your actual API call
-        const newData = ref([])
-        const getMovieList = axios({
-            method:"get"
-        })
+        // 화면 끝을 닿으면 API 요청을 보내서 또 데이터를 가져오게 끔
+        const response = await axios.get(`${movieStore.API_URL}/sort/${sort_num.value}/page/${currentPage.value}`, {
+            headers: {
+              Authorization: `Token ${accountStore.token}`}
+          })
+        const newData = response.data
+
         if (newData.length > 0) {
-          data.value = [...data.value, ...newData.value];
+          data.value = [...data.value, ...newData];
           currentPage.value++;
-          $state.loaded();
+          $state.loaded()
         }else {
-          // No more data to load
-          allDataLoaded.value = true;
-          $state.complete();
+          AllDataLoaded.value = true
+          $state.complete()
         }
       } catch (error) {
         console.error('Error loading more data:', error);
-        $state.complete(); // Handle error by marking as complete
+        $state.complete(); 
       }
     }
 

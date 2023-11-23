@@ -16,13 +16,13 @@ from accounts.models import User
 # 영화 리스트 함수
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def movie_list(request, sort_num):
+def movie_list(request, sort_num, page_num):
     if request.method == 'GET':
         if sort_num == 1: # 인기도순
-            populars = Movie.objects.filter(release_date__lte=date.today()).order_by('-popularity')[:500]
+            populars = Movie.objects.filter(release_date__lte=date.today()).order_by('-popularity')[(page_num-1)*50+1: page_num*50+1]
             serializers = MovieListSerializer(populars, many=True)
         elif sort_num == 2: # 최신 - 인기 순 개봉이 된 영화들만
-            movies = Movie.objects.filter(release_date__lte=date.today()).order_by('-release_date','popularity')[:500]
+            movies = Movie.objects.filter(release_date__lte=date.today()).order_by('-release_date','popularity')[(page_num-1)*50+1: page_num*50+1]
             serializers = MovieListSerializer(movies, many=True)
         elif sort_num == 3: # 맞춤 추천
             movies = None
@@ -47,12 +47,12 @@ def movie_list(request, sort_num):
             else:
                 return Response(status=status.HTTP_204_NO_CONTENT)
         elif sort_num == 4: # 개봉 예정 영화 금일 부터 가깝고 인기가 많은 순으로 정렬
-            movies = Movie.objects.filter(release_date__gt=date.today()).order_by('release_date', '-popularity')
+            movies = Movie.objects.filter(release_date__gt=date.today()).order_by('release_date', '-popularity')[:100]
             serializers = MovieListSerializer(movies, many=True)
         # 각 장르의 id에 맞춰 해당 장르를 역참조하여 인기도가 높은 순으로 정렬
         elif sort_num in [12, 14, 16, 18, 27, 28, 35, 36, 37, 53, 80, 99, 878, 9648, 10402, 10749, 10751, 10752, 10770]:
             genre = get_object_or_404(Genre, pk=sort_num)
-            movies = genre.movie_set.all().order_by('-popularity')
+            movies = genre.movie_set.all().order_by('-popularity')[(page_num-1)*50+1: page_num*50+1]
             serializers = MovieListSerializer(movies, many=True)
         else:
             # 나머지로 들어오는 요청은 없는 요청 이므로 컨텐츠 없음을 반환 해준다.
