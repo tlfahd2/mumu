@@ -30,9 +30,6 @@ const movieStore = useMovieStore()
 const accountStore = useAccountStore()
 const router = useRouter()
 
-onMounted(() => {
-  movieStore.getMovieList(1)
-})
 const searchInput = ref('')
 
 const getSearchMovie = ()=>{
@@ -45,34 +42,37 @@ const getSearchMovie = ()=>{
 </script>
 
 <style  scoped>
+@font-face {
+  font-family: "euljiro";
+  src: url("fonts/BMEuljiro10yearslater.ttf")
+}
 .main{
   padding-top: 5.8rem;
 }
 .navbar{
+  height: 70px;
   padding-left: 8rem;
   padding-right: 8rem;
-  
-  font-size: larger;
-  font-weight: bold;
-  background-color: black;
-
+  font-family: 'euljiro';
+  font-size: 30px;
+  /* background-color: #00264B; */
+  background-color: #BDCEBE;
 }
 .nav-item{
   display: inline-block;
   text-decoration: none;
-  color:white;
+  color:#10AF85;
   text-transform:uppercase;
 }
 .nav-item:after {
   display:block;
   content: '';
-  border-bottom: solid 3px white;  
+  border-bottom: solid 5px #0B685A;  
   transform: scaleX(0);  
   transition: transform 250ms ease-in-out;
 }
 .nav-item:hover:after{
   transform: scaleX(1);
-
 }
 
 </style>
