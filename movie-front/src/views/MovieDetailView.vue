@@ -42,8 +42,8 @@ import ReviewCreateView from './ReviewCreateView.vue'
 const movieStore = useMovieStore()
 const route = useRoute()
 const movie_id = route.params.movie_id
-
 const movie = ref({})
+
 
 onMounted(() => {
     axios({

@@ -56,7 +56,7 @@ const accountStore = useAccountStore()
 const router = useRouter()
 const data =ref([])
 const currentPage = ref(2)
-const pageSize = 10;
+const loading = ref(false)
 const AllDataLoaded = ref(false)
 const sort_num = ref(1)
 
@@ -78,27 +78,33 @@ const sortMovie= (number) =>{
 // 무한 스크롤 함수
 const loadMoreData = async ($state) => {
     console.log('데이터 더줘')
-      try {
-        // 화면 끝을 닿으면 API 요청을 보내서 또 데이터를 가져오게 끔
+    if( loading.value){
+        return;
+    }
+    loading.value = true
+    try {
+    // 화면 끝을 닿으면 API 요청을 보내서 또 데이터를 가져오게 끔
         const response = await axios.get(`${movieStore.API_URL}/sort/${sort_num.value}/page/${currentPage.value}`, {
             headers: {
-              Authorization: `Token ${accountStore.token}`}
-          })
+                Authorization: `Token ${accountStore.token}`}
+            })
         const newData = response.data
-
+        loading.value = false
+        
         if (newData.length > 0) {
-          data.value = [...data.value, ...newData];
-          currentPage.value++;
-          $state.loaded()
+            data.value = [...data.value, ...newData];
+            currentPage.value++;
+            $state.loaded()
         }else {
-          AllDataLoaded.value = true
-          $state.complete()
+            AllDataLoaded.value = true
+            $state.complete()
         }
-      } catch (error) {
-        console.error('Error loading more data:', error);
-        $state.complete(); 
-      }
+        } catch (error) {
+        console.error('Error loading more data:', error)
+        showErrorNotification(error.message)
+        $state.complete()
     }
+}
 
 </script>
 

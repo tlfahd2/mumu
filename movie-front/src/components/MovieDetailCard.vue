@@ -14,6 +14,9 @@
                     <ReviewCreateView :movie="movie" />
                     <button @click="like" v-if="isLike === true">좋아요 취소</button>
                     <button @click="like" v-else>좋아요</button>
+                    {{ movie.like_users?.length }}
+                    {{ movie.like_users }}
+                    {{ accountStore.user_pk }}
                     <TrailerModal
                     v-if="movie.trailer"
                     :trailer-key="movie.trailer"
