@@ -11,7 +11,9 @@
                     <p>개봉일 :{{ movie.release_date }}</p>
                     <p>{{ movie.runtime }}분</p>
                     <p>{{ movie.overview }}</p>
-                    <button class="btn btn-primary">리뷰 쓰기</button>
+                    <ReviewCreateView :movie="movie" />
+                    <button @click="like" v-if="isLike === true">좋아요 취소</button>
+                    <button @click="like" v-else>좋아요</button>
                     <TrailerModal
                     v-if="movie.trailer"
                     :trailer-key="movie.trailer"
@@ -29,11 +31,42 @@ import { useAccountStore } from '../stores/account'
 import { useMovieStore } from '../stores/movie'
 import axios from 'axios'
 import TrailerModal from './TrailerModal.vue'
+import ReviewCreateView from '../views/ReviewCreateView.vue'
 
+const accountStore = useAccountStore()
 const movieStore = useMovieStore()
+const route = useRoute()
+const router = useRouter()
+const movie_id = route.params.movie_id
+
+const user = ref({})
+const isLike = ref('')
+
 const props = defineProps({
     movie:Object
 })
+
+
+onMounted (() => {
+    accountStore.getUser(accountStore.user_username)
+  })
+
+const like = function () {
+    axios({
+      method: 'post',
+      url: `${movieStore.API_URL}/like_movies/${movie_id}/${accountStore.user_pk}/`,
+      headers: {
+        Authorization: `Token ${accountStore.token}`
+      }
+    })
+    .then((res) => {
+        getUser()
+        isLike.value = res.data
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
 
 </script>
 

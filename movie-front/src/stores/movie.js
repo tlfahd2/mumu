@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { defineStore } from 'pinia'
 import { useAccountStore } from '../stores/account'
 import axios from 'axios'
@@ -19,7 +19,9 @@ export const useMovieStore = defineStore('movie', () => {
     const getMovieList=(sort_num)=>{
         axios({
             method: 'get',
-            url: `${API_URL}/sort/${sort_num}`
+            url: `${API_URL}/sort/${sort_num}`,
+            headers: {
+              Authorization: `Token ${accountStore.token}`}
           })
            .then((response)=>{
             movies.value = response.data
@@ -32,7 +34,9 @@ export const useMovieStore = defineStore('movie', () => {
     const getGenreList = () =>{
       axios({
         method : 'get',
-        url:`${API_URL}/genres`
+        url:`${API_URL}/genres`,
+        headers: {
+          Authorization: `Token ${accountStore.token}`}
       }).then((response)=>{
         genres.value = response.data
        })
@@ -44,7 +48,9 @@ export const useMovieStore = defineStore('movie', () => {
     const getReviewList = () =>{
       axios({
         method: 'get',
-        url: `${API_URL}/reviews/`
+        url: `${API_URL}/reviews/`,
+        headers: {
+          Authorization: `Token ${accountStore.token}`}
       }).then((response)=>{
           reviews.value = response.data
       }).catch((err)=>{
@@ -55,7 +61,9 @@ export const useMovieStore = defineStore('movie', () => {
     const getMovieReviewList = (movie_id) => {
       axios({
         method: 'get',
-        url: `${API_URL}/${movie_id}/reviews/`
+        url: `${API_URL}/${movie_id}/reviews/`,
+        headers: {
+          Authorization: `Token ${accountStore.token}`}
       }).then((response)=>{
           movie_reviews.value = response.data
       }).catch((err)=>{
@@ -66,7 +74,9 @@ export const useMovieStore = defineStore('movie', () => {
     const getReview = (review_id) =>{
       axios({
           method:'get',
-          url:`${API_URL}/reviews/${review_id}/`
+          url:`${API_URL}/reviews/${review_id}/`,
+          headers: {
+            Authorization: `Token ${accountStore.token}`}
       }).then((response)=>{
           review.value = response.data
       }).catch((error)=>{

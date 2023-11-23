@@ -68,6 +68,10 @@ const props = defineProps({
     movie: Object
 })
 
+onMounted(() => {
+    movieStore.getMovieReviewList(movie_id)
+})
+
 // 리뷰 생성
 const createReview = () => {
     axios({
