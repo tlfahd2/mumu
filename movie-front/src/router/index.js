@@ -1,6 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import SignUpView from '../views/SignUpView.vue'
-import LogInView from '../views/LogInView.vue'
 import MainView from '../views/MainView.vue'
 import ChangePasswordView from '../views/ChangePasswordView.vue'
 
@@ -8,16 +6,6 @@ import ChangePasswordView from '../views/ChangePasswordView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/signup',
-      name: 'SignUpView',
-      component: SignUpView
-    },
-    {
-      path: '/login',
-      name: 'LogInView',
-      component: LogInView
-    },
     {
       path:'/logout',
       name:'logout',
@@ -95,7 +83,7 @@ const router = createRouter({
     },
     {
       path: '/',
-      name: 'test',
+      name: 'signup',
       component: () => import('../views/signup.vue')
     },
   ]

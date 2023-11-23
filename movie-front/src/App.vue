@@ -5,15 +5,27 @@
           <nav class="navbar fixed-top" v-if="accountStore.isLogin">
               <RouterLink class= "nav-item" :to="{ name: 'main' }">홈</RouterLink>
               <RouterLink class= "nav-item" :to="{ name: 'communitymain' }">커뮤니티</RouterLink>
-              <RouterLink class= "nav-item" v-if="accountStore.isLogin === true" @click="accountStore.logOut" :to="{ name: 'main' }">로그아웃</RouterLink>
-              <RouterLink class= "nav-item" v-if="accountStore.isLogin === true" :to="{ name: 'change_password' }">비밀번호 변경</RouterLink>
+              <RouterLink class= "nav-item" :to="{ name: 'profile', params: {username: accountStore.user_username} }">커뮤니티</RouterLink>
               <form class="d-flex" role="search" @submit.prevent="getSearchMovie">
                 <input class="form-control me-2" type="search" placeholder="검색어를 입력하세요" aria-label="Search" v-model="searchInput">
                 <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
               </form>
-          </nav>
-        </div>
-      </header>
+              <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle"></i>
+          </a>
+          <ul class="dropdown-menu">
+
+            <RouterLink class= "dropdown-item" :to="{ name: 'profile', params: {username: accountStore.user_username} }">내 프로필</RouterLink>
+            
+            <li><hr class="dropdown-divider"></li>
+            <RouterLink class= "dropdown-item" @click="accountStore.logOut" :to="{ name: 'signup' }">로그아웃</RouterLink>
+          </ul>
+        </li>
+      </nav>
+    </div>
+  </header>
+  <ProfileView />
   <RouterView/>
   </div>
 </template>
@@ -25,10 +37,15 @@ import { useRouter, useRoute } from 'vue-router'
 import { useAccountStore } from './stores/account.js'
 import { useMovieStore } from './stores/movie.js'
 import axios from 'axios'
+import ProfileView from './views/ProfileView.vue'
 
 const movieStore = useMovieStore()
 const accountStore = useAccountStore()
 const router = useRouter()
+const showModdal = ref(false);
+onMounted(() => {
+  movieStore.getMovieList(1)
+})
 
 const searchInput = ref('')
 
@@ -74,5 +91,7 @@ const getSearchMovie = ()=>{
 .nav-item:hover:after{
   transform: scaleX(1);
 }
+
+
 
 </style>

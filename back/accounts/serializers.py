@@ -2,6 +2,8 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from .models import User
+from movies.models import Movie
+from movies.models import Review
 from allauth.account.adapter import get_adapter
 
 class CustomRegisterSerializer(RegisterSerializer):
@@ -49,7 +51,18 @@ class UserSerializer(serializers.ModelSerializer):
             model = User
             fields = ('id','username',)
     followers = FollowSerializer(many=True)
+    class MovieSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Movie
+            fields = '__all__'
+    like_movies = MovieSerializer(many=True)
+    class ReviewSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Review
+            fields = '__all__'
+    like_reviews = ReviewSerializer(many=True)
+    hate_reviews = ReviewSerializer(many=True)
     class Meta:
         model = User
-        fields = ('id', 'username', 'password', 'name', 'year', 'month', 'day', 'gender', 'followings', 'followers', 'music',)
+        fields = ('__all__')
         read_only_fields = ('followings', 'like_movies', 'followers', 'like_reviews', 'hate_reviews',)

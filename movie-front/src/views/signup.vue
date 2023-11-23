@@ -30,9 +30,9 @@
                 <label class="form-wrapper__label" for="login-password">비밀번호</label>
                 <div class="input-container">
                 <input v-if="is_looking === false" v-model.trim="password" id="signup-password" class="form-wrapper__input" type="password" placeholder="Password"
-                  name="password" pattern=".{3,}" title="비밀번호는 8자 이상" required>
+                  name="password" pattern=".{3,}" required>
                   <input v-if="is_looking === true" v-model.trim="password" id="signup-password" class="form-wrapper__input" type="text" placeholder="Password"
-                  name="password" pattern=".{3,}" title="비밀번호는 8자 이상" required>
+                  name="password" pattern=".{3,}" required>
                   <label class="bi_password" @click="change_looking">
                             <i v-if="!is_looking" class="bi-eyeglasses"></i>
                             <i v-else class="bi-sunglasses"></i>
@@ -155,23 +155,26 @@ for (let index = 1; index < 32;index++) {
     days.value.push(index);
 }
 
+// 회원가입
 const signUp = function () {
-  const arrayAsString = JSON.stringify(music.value)
+    const arrayAsString = JSON.stringify(music.value);
     const payload = {
-        name: name.value,
-        year: year.value,
-        month: month.value,
-        day: day.value,
-        gender: gender.value,
-        username: username.value,
-        password1: password1.value,
-        password2: password2.value,
-        music: arrayAsString
+      name : name.value,
+      year : year.value,
+      month : month.value,
+      day : day.value,
+      gender : gender.value,
+      username : username.value,
+      password1 : password1.value,
+      password2 : password2.value,
+      music : arrayAsString
     }
+    
     accountStore.signUp(payload)
-    router.push({name: 'main'})
-}
+  } 
 
+
+// 로그인
 const logIn = function () {
     const payload = {
       username: id.value,
@@ -180,6 +183,7 @@ const logIn = function () {
     accountStore.logIn(payload)
   }
 
+  // 비밀번호 가리기
 const change_looking = function () {
     is_looking.value = !is_looking.value
 }
@@ -209,106 +213,18 @@ const handleChange = function() {
       }
 }
 
-
-
-/* ===========================
-    Elements Selectors
-============================ */
-  const elm = ref({
-        arrow: null,
-        overlay: null,
-        title: null,
-        signUpButton: null,
-        loginButton: null,
-        loginForm: null,
-        registerForm: null,
-      })
-  onMounted(() => {
-    elm.value.arrow = document.querySelector(".form-container__arrow");
-      elm.value.overlay = document.querySelector(".overlay");
-      elm.value.title = document.querySelector(".title");
-      elm.value.signUpButton = document.querySelector(".buttons__signup");
-      elm.value.loginButton = document.querySelector(".buttons__signup--login");
-      elm.value.loginForm = document.querySelector(".login-form");
-      elm.value.registerForm = document.querySelector(".login-form--register");
-    });
-/* ===========================
-    Properties Object
-============================ */
-
-const props = ref({
-      left: '20px',
-      bottom: '-500px',
-      transition1: 'bottom 1s',
-      transition2: 'bottom 2s',
-      opacity0: '0',
-      opacity1: '1',
-      trnsDelay: '1s',
-      zIndex: '6',
-      left0: '0',
-      trnsDelay0: '0s',
-      zIndex0: '0',
-      leftM120: '-120px',
-    })
-/* ===========================
-    Elements Array
-============================ */
-
-  const elms = [
-    elm.value.arrow,
-    elm.value.overlay,
-    elm.value.title,
-    elm.value.signUpButton,
-    elm.value.loginButton,
-    elm.value.loginForm,
-    elm.value.registerForm,
-  ]
-
-  
-  const handleTransition = (elements, props) => {
-  elements.forEach((element, i) => {
-    Object.assign(element[i], props[i]);
-  });
-}
-/* ===========================
-    Events
-============================ */
-
   const handleSignUp = function () {
-    const styles = [
-      { left: props.value.left, opacity: props.value.opacity0 },
-      { opacity: props.value.opacity0 },
-      { opacity: props.value.opacity0 },
-      { transition: props.value.transition1, bottom: props.value.bottom },
-      { transition: props.value.transition2, bottom: props.value.bottom },
-      { opacity: props.value.opacity0 },
-      { transition: `${props.value.opacity1} ${props.value.trnsDelay} ${props.value.zIndex}` },
-    ]
-      // handleTransition(elms, styles)
       selected.value = 3
     }
 
 
-    const handleLogin = function () {
-    console.log(2)
+  const handleLogin = function () {
+    selected.value = 2
+  }
 
-    const styles = [
-      { left: props.value.left, opacity: props.value.opacity0 },
-      { opacity: props.value.opacity0 },
-      { opacity: props.value.opacity0 },
-      { transition: props.value.transition1, bottom: props.value.bottom },
-      { transition: props.value.transition2, bottom: props.value.bottom },
-      { opacity: props.value.opacity0 },
-      { transition: `${props.value.opacity1} ${props.value.trnsDelay} ${props.value.zIndex}` },
-    ]
-      console.log(styles)
-      // handleTransition(elms, styles)
-      selected.value = 2
-    }
-
-    const goMain = function () {
-      selected.value = 1
-    }
+  const goMain = function () {
+    selected.value = 1
+  }
 
     // 배경 이미지 랜덤
     const backgrounds = [
