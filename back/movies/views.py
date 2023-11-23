@@ -37,7 +37,8 @@ def movie_list(request, sort_num):
             for movie in like_movies:
                 for genre in user_genres:
                     users = movie.like_users.filter(music__icontains=genre)
-                    movies = movies.union(users.like_movies.all())
+                    for user in users:
+                        movies = movies.union(user.like_movies.all())
             serializers = MovieListSerializer(movies, many=True)
             return Response(serializers.data)
         elif sort_num == 4: # 개봉 예정 영화 금일 부터 가깝고 인기가 많은 순으로 정렬
@@ -128,27 +129,7 @@ def review_detail(request, review_pk):
    elif request.method == 'DELETE':
       review.delete()
       return Response(f"{review_pk}번 게시글 삭제", status=status.HTTP_204_NO_CONTENT)
-
-
-# @api_view(["GET", "POST"])
-# def review_comments(request, review_pk):
-#     review = get_object_or_404(Review, pk=review_pk)
-#     if request.method == 'GET':
-#         comments = review.comment_set.all()
-#         serializers = CommentSerializer(comments, many= True)
-#         return Response(serializers.data)
-#     elif request.method == "POST":
-#         serializer = CommentSerializer(data=request.data)
-#         if serializer.is_valid(raise_exception=True):
-#            serializer.save(review=review)
-#            return Response(serializer.data, status=status.HTTP_201_CREATED)
    
-
-
-# @api_view(["GET"])
-# def review_comment(request, review_pk, comment_pk):
-#    pass
-
 
 # 영화 좋아요
 @api_view(["POST"])
