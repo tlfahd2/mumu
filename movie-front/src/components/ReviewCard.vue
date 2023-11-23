@@ -1,15 +1,14 @@
 <template>
-    <div class="article">
+    <div class="review">
         <hr>
         <p>{{ review.user?.username }}</p>
         <hr>
-        <p>{{ review.movie.title }}</p>
         <p>{{ review.content }}</p>
         <p>{{ review.rank }}</p>
         <p>최종 수정일 :{{ review.updated_at }}</p>
         <hr>
-        <button class="btn btn-sm btn-primary" @click="updateReview">게시글 수정</button>
-        <button class="btn btn-sm btn-danger" @click="deleteReview()">게시글 삭제</button>
+        <button class="btn btn-sm btn-primary" @click="updateReview">리뷰 수정</button>
+        <button class="btn btn-sm btn-danger" @click="deleteReview()">리뷰 삭제</button>
     </div>
 </template>
 
@@ -26,7 +25,7 @@ const props = defineProps({
     review:Object
 })
 
-const communityStore = useCommunityStore()
+const movieStore = useMovieStore()
 const accountStore = useAccountStore()
 const router = useRouter()
 const commentContent = ref('')
@@ -38,7 +37,7 @@ const updateReview = () =>{
 const deleteReview = ()=>{
     axios({
         method:'delete',
-        url: `${communityStore.API_URL}/${props.review.id}/`,
+        url: `${movieStore.API_URL}/reviews/${props.review.id}/`,
         headers: {
             Authorization: `Token ${accountStore.token}`}
     }

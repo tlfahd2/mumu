@@ -32,6 +32,8 @@ import axios from 'axios'
 
 import MovieDetailCard from '../components/MovieDetailCard.vue'
 import PersonCard from '../components/PersonCard.vue'
+import router from '../router'
+import ReviewCreateView from './ReviewCreateView.vue'
 
 
 const movieStore = useMovieStore()

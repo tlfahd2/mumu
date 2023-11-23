@@ -23,7 +23,6 @@
                 </div>
 
                 <h1 v-if="choice === 2">리뷰 게시판</h1>
-                <button v-if="choice === 2" @click="createReview">리뷰 생성</button>
                 <div
                 v-if="choice===2"
                 v-for="review in movieStore?.reviews"
@@ -77,6 +76,7 @@ onMounted(() => {
 const createArticle = () => {
     router.push({ name:'createArticle' })
 }
+
 const moveDetail = (article_id)=>{
     router.push({ name:'articleDetail', params:{ article_id: article_id }})
 }
@@ -84,18 +84,16 @@ const moveDetail = (article_id)=>{
 // 리뷰게시판
 onMounted(() => {
     movieStore.getReviewList()
-    for (let index = 0; index < movieStore.reviews.length; index++) {
-        if (reviews[index].movie in movies) {
-            continue
-        } else {
-            reviews[index].movie.push(movies)
-        }
+    // for (let index = 0; index < movieStore.reviews.length; index++) {
+    //     if (reviews[index].movie in movies) {
+    //         continue
+    //     } else {
+    //         reviews[index].movie.push(movies)
+    //     }
         
-    }
+    // }
 })
-const createReview = () => {
-    router.push({ name:'createReview' })
-}
+
 const moveReviewDetail = (review_id)=>{
     router.push({ name:'reviewDetail', params:{ review_id: review_id }})
 }
