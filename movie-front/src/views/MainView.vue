@@ -1,5 +1,5 @@
 <template>
-    <main class="main">
+    <main class="main container">
         <div>
             <div class="drop d-flex">
                 <button class="btn" @click="sortMovie(1)">인기순</button>
@@ -21,11 +21,13 @@
                     </ul>
                 </div>
             </div>
-            <MovieCard
-            v-for="movie in movieStore.movies"
-            :key="movie.id"
-            :movie="movie"
-            />
+            <div class="movie-list">
+                <MovieCard
+                v-for="movie in movieStore.movies"
+                :key="movie.id"
+                :movie="movie"
+                />
+            </div>
         </div>
     </main>
 </template>
@@ -53,8 +55,10 @@ const sortMovie= (number) =>{
 </script>
 
 <style scoped>
-.main{
-    padding-top:5.8rem;
+.movie-list{
+    display: flex;
+    flex-wrap: wrap;
+    width: 90vw;
 }
 
 </style>

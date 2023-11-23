@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 # 인증된 사람들만 가능하도록
 from rest_framework.permissions import IsAuthenticated
+from accounts.models import User
 from .models import Movie, Genre, Review, Comment, Actor, Director
 from .serializers import MovieListSerializer, GenreSerializer, ReviewSerializer, CommentSerializer
 from accounts.models import User
@@ -14,6 +15,7 @@ from accounts.models import User
 
 # 영화 리스트 함수
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def movie_list(request, sort_num):
     if request.method == 'GET':
         if sort_num == 1: # 인기도순
@@ -22,8 +24,22 @@ def movie_list(request, sort_num):
         elif sort_num == 2: # 최신 - 인기 순 개봉이 된 영화들만
             movies = Movie.objects.filter(release_date__lte=date.today()).order_by('-release_date','popularity')[:500]
             serializers = MovieListSerializer(movies, many=True)
-        elif sort_num == 3: # 맞춤 추천 
-            pass
+        elif sort_num == 3: # 맞춤 추천
+            movies = []
+            # 해당 유저가 좋아하는 음악 장르 추출 vue에서 문자열로 보내줌
+            # 정규 표현식을 통해 단어들만 추출
+            me = request.user
+            music_genre = me.music
+            user_genres = re.findall(r'"(.*?)"', music_genre)
+            # 해당 유저가 좋아요를 누른 모든 영화 
+            like_movies = me.like_movies.all()
+            # 그 영화들을 좋아하는 다른 유저들 중 나의 음악 장르와 일치하는 사람들이 좋아요 한 영화 추천
+            for movie in like_movies:
+                for genre in user_genres:
+                    users = movie.like_users.filter(music__icontains=genre)
+                    movies = movies.union(users.like_movies.all())
+            serializers = MovieListSerializer(movies, many=True)
+            return Response(serializers.data)
         elif sort_num == 4: # 개봉 예정 영화 금일 부터 가깝고 인기가 많은 순으로 정렬
             movies = Movie.objects.filter(release_date__gt=date.today()).order_by('release_date', '-popularity')
             serializers = MovieListSerializer(movies, many=True)
@@ -39,15 +55,15 @@ def movie_list(request, sort_num):
 
 
 @api_view(["GET"])
-def search_movie(request, keyward):
+def search_movie(request, keyword):
     # 검색한 키워드가 감독, 배우, 장르에 포함 되어 있는지 확인
-    actors = Actor.objects.filter(name__icontains=keyward) | Actor.objects.filter(another_name__icontains=keyward)
-    directors = Director.objects.filter(name__icontains=keyward) | Director.objects.filter(another_name__icontains=keyward)
-    genres = Genre.objects.filter(name__icontains=keyward) 
+    actors = Actor.objects.filter(name__icontains=keyword) | Actor.objects.filter(another_name__icontains=keyword)
+    directors = Director.objects.filter(name__icontains=keyword) | Director.objects.filter(another_name__icontains=keyword)
+    genres = Genre.objects.filter(name__icontains=keyword) 
     # 제목에 키워드가 있는 영화
-    movies = Movie.objects.filter(title__icontains=keyward)
+    movies = Movie.objects.filter(title__icontains=keyword)
     # 내용에 키워드가 포함된 영화 추가해주기
-    movies = movies.union(Movie.objects.filter(overview__icontains=keyward))
+    movies = movies.union(Movie.objects.filter(overview__icontains=keyword))
     # 검색한 단어가 포함된 배우들의 영화 정보 저장
     for actor in actors:
         movies = movies.union(actor.movie_set.all())

@@ -1,22 +1,24 @@
 <template>
-    <main class="main">
-        <div>
-            <h1>영화 상세</h1>
+    <main class="container main">
+        <div class="movie-info">
             <MovieDetailCard
             :movie="movie"
             />
-            <p>감독</p>
-            <PersonCard
-            :person="movie.director"
-            />
-            <br>
-            <p>주연 배우</p>
-            <PersonCard
-            v-for="actor in movie.actors"
-            :person="actor"
-            />
-            <ReviewCreateView
-            :movie="movie"/>
+            <section>
+                <div class="credits">
+                    <p class="tag">감독/출연</p>
+                    <div>
+                        <PersonCard
+                        :person="movie.director"
+                        />
+                        <PersonCard
+                        v-for="actor in movie.actors"
+                        :key="actor.id"
+                        :person="actor"
+                        />
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 </template>
@@ -48,18 +50,15 @@ axios({
     }).catch((error)=>{
         console.log(error)
     })
-
-
-const createReview = function () {
-    router.push({name: 'createReview', params: {movie_id: movie_id}})
-}
-
-
-
 </script>
 
 <style scoped>
 .main{
     padding-top: 5.8rem;
 }
+.credits{
+    display: flex;
+    border:1px solid
+}
+
 </style>
