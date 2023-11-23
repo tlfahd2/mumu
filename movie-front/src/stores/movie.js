@@ -19,10 +19,10 @@ export const useMovieStore = defineStore('movie', () => {
     const movie_review = ref({})
 
 
-    const getMovieList=(sort_num)=>{
+    const getMovieList=(sort_num, page)=>{
         axios({
             method: 'get',
-            url: `${API_URL}/sort/${sort_num}`,
+            url: `${API_URL}/sort/${sort_num}/page/${page}`,
             headers: {
               Authorization: `Token ${accountStore.token}`}
           })

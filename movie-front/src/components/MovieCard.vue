@@ -2,8 +2,6 @@
     <article>
         <div class="poster" @click="moveDetail">
             <img :src="posterUrl" class="img-fluid img-thumbnail" :alt="movie.title">
-            {{ movie.popularity }}
-            {{ movie.release_date }}
         </div>
     </article>
 </template>
