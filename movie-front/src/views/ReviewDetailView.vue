@@ -4,6 +4,12 @@
             <ReviewCard
             :review="movieStore.review"
             />
+            <div v-if="accountStore.user_username !== user.username">
+            <button @click="like" v-if="isLike === true">좋아요 취소</button>
+            <button @click="like" v-if="isLike === false && isHate === false">좋아요</button>
+            <button @click="hate" v-if="isHate === true">싫어요 취소</button>
+            <button @click="hate" v-if="isLike === false && isHate === false">싫어요</button>
+        </div>
         </div>
     </main>
     
@@ -16,16 +22,72 @@ import { useAccountStore } from '../stores/account'
 import { useMovieStore } from '../stores/movie'
 import { useCommunityStore } from '../stores/community'
 import axios from 'axios'
-import ArticleCard from '../components/ArticleCard.vue'
+import ReviewCard from '../components/ReviewCard.vue'
 
 const movieStore = useMovieStore()
+const accountStore = useAccountStore()
 const route = useRoute()
-const review_id = route.params.reivew_id
+const review_id = route.params.review_id
+const user = ref({})
+
+const isLike = ref('')
+const isHate = ref('')
+
 
 onMounted(()=>{
-    movieStore.getReivew(review_id)
+    movieStore.getReview(review_id)
 })
 
+const getUser = function () {
+    axios({
+      method: 'post',
+      url: `${accountStore.API_URL}/api/v1/accounts/${accountStore.user_username}/`,
+      headers: {
+        Authorization: `Token ${accountStore.token}`
+      }
+    })
+    .then((res) => {
+      user.value = res.data
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
+getUser()
+
+const like = function () {
+    axios({
+      method: 'post',
+      url: `${movieStore.API_URL}/like_reviews/${review_id}/${accountStore.user_pk}/`,
+      headers: {
+        Authorization: `Token ${accountStore.token}`
+      }
+    })
+    .then((res) => {
+        getUser()
+        isLike.value = res.data
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
+
+const hate = function () {
+    axios({
+      method: 'post',
+      url: `${movieStore.API_URL}/hate_reviews/${review_id}/${accountStore.user_pk}/`,
+      headers: {
+        Authorization: `Token ${accountStore.token}`
+      }
+    })
+    .then((res) => {
+        getUser()
+        isHate.value = res.data
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
 
 
 </script>

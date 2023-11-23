@@ -1,9 +1,8 @@
 <template>
     <main class="main">
         <div>
+            <img :src="movieStore.BASE_IMAGE_URL+movie.poster_path" :alt="movie.title">
             <form @submit.prevent="updateReview">
-                <label for="title">제목</label>
-                <input type="text" id="title" v-model.trim="title">
                 <label for="content">내용</label>
                 <textarea name="내용" id="content" cols="30" rows="10" v-model.trim="content"></textarea>
                 <select v-model="rank">
@@ -32,7 +31,8 @@ const review_id =  route.params.review_id
 const content = ref('')
 const rank = ref('')
 const scores = ref([])
-
+const movie = ref({})
+const movie_id = movieStore.review.movie.id
 
 onMounted(()=>{
     movieStore.getReview(review_id)
@@ -51,7 +51,7 @@ const updateReview = () =>{
             headers: {
             Authorization: `Token ${accountStore.token}`}
         }).then((response) => {
-            router.push({name:'reviewDetail', params:{review_id: reivew_id}})
+            router.push({name:'reviewDetail', params:{review_id: review_id}})
         }).catch((err) =>{
             console.log(err)
         })
@@ -60,6 +60,16 @@ const updateReview = () =>{
 for (let index = 10; index > -1;index--) {
     scores.value.push(index);
     }
+
+    axios({
+        method:'get',
+        url : `${movieStore.API_URL}/detail/${movie_id}`
+    }).then((response)=>{
+        movie.value = response.data
+    }).catch((error)=>{
+        console.log(error)
+    })
+
 </script>
 
 <style scoped>

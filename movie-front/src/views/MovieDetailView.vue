@@ -15,6 +15,8 @@
             v-for="actor in movie.actors"
             :person="actor"
             />
+            <ReviewCreateView
+            :movie="movie"/>
         </div>
     </main>
 </template>
@@ -28,6 +30,8 @@ import axios from 'axios'
 
 import MovieDetailCard from '../components/MovieDetailCard.vue'
 import PersonCard from '../components/PersonCard.vue'
+import router from '../router'
+import ReviewCreateView from './ReviewCreateView.vue'
 
 
 const movieStore = useMovieStore()
@@ -46,6 +50,9 @@ axios({
     })
 
 
+const createReview = function () {
+    router.push({name: 'createReview', params: {movie_id: movie_id}})
+}
 
 
 
