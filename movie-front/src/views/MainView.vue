@@ -77,7 +77,6 @@ const sortMovie= (number) =>{
 
 // 무한 스크롤 함수
 const loadMoreData = async ($state) => {
-    console.log('데이터 더줘')
     if( loading.value){
         return;
     }
@@ -89,13 +88,15 @@ const loadMoreData = async ($state) => {
                 Authorization: `Token ${accountStore.token}`}
             })
         const newData = response.data
+        console.log(newData)
         loading.value = false
         
-        if (newData.length > 0) {
+        if (newData.length > 48) {
             data.value = [...data.value, ...newData];
             currentPage.value++;
             $state.loaded()
         }else {
+            data.value = [...data.value, ...newData]
             AllDataLoaded.value = true
             $state.complete()
         }
