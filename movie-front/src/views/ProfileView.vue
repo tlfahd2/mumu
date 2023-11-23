@@ -1,14 +1,13 @@
 <template>
     <main class="main">
         <div>
-        <h1>{{ user.username }}의 프로필</h1>
-        <div v-if="accountStore.user_username !== user.username ">
-            <button @click="follow" v-if="accountStore.isFollow === true">팔로우 취소</button>
-            <button @click="follow" v-else>팔로우</button>
-        </div>
+        <h1>{{ accountStore.user.username }}의 프로필</h1>
+        {{ isFollow }}
+        <button @click="follow" v-if="isFollow === true">팔로우 취소</button>
+        <button @click="follow" v-else>팔로우</button>
         <p @click="follow_list()" type="button">팔로워 : {{ accountStore.user.followers?.length }}</p>
         <p>팔로잉 : {{ accountStore.user.followings?.length }}</p>
-        <p v-for="follower in user.followers"> {{follower.username }}</p>
+        <p v-for="follower in accountStore.user.followers"> {{follower.username }}</p>
         <!-- v-if="isFollowListModalVisible === true" 
         @close="closeFollowListModal"  -->
     </div>
@@ -27,13 +26,21 @@ import FollowListModal from '../components/FollowListModal.vue'
 const accountStore = useAccountStore()
 const router = useRouter()
 const route = useRoute()
-const user = ref({})
+const isFollow = ref(false)
 const isFollowListModalVisible = ref(false)
 
-onMounted(() => {
+onMounted(()=>{
   accountStore.getUser(route.params.username)
+  setTimeout(()=>{
+    console.log(accountStore.user)
+    if( accountStore.user.followers?.find((follower)=> follower.id === accountStore.user_pk)){
+      isFollow.value = true
+    }
+    else{
+      isFollow.value = false
+    }
+    },100)
 })
-
 
 const follow = function () {
     axios({
@@ -44,8 +51,8 @@ const follow = function () {
       }
     })
     .then((res) => {
-      accountStore.isFollow = !accountStore.isFollow
       accountStore.getUser(route.params.username)
+      isFollow.value = !isFollow.value
     })
     .catch((err) => {
       console.log(err)

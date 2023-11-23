@@ -12,7 +12,7 @@
                     <p>{{ movie.runtime }}분</p>
                     <p>{{ movie.overview }}</p>
                     <ReviewCreateView :movie="movie" />
-                    <button @click="like" v-if="accountStore.isLike === true">좋아요 취소</button>
+                    <button @click="like" v-if="isLike === true">좋아요 취소</button>
                     <button @click="like" v-else>좋아요</button>
                     <TrailerModal
                     v-if="movie.trailer"
@@ -37,18 +37,21 @@ const accountStore = useAccountStore()
 const movieStore = useMovieStore()
 const route = useRoute()
 const router = useRouter()
+const isLike = ref(false)
 const movie_id = route.params.movie_id
-
-const user = ref({})
 
 const props = defineProps({
     movie:Object
 })
 
-
 onMounted (() => {
-    accountStore.getUser(accountStore.user_username)
-  })
+  if (movieStore.movie.like_users?.includes(accountStore.user_pk)){
+    isLike.value = true    
+  }
+  else{
+    isLike.value = false
+  }
+})
 
 const like = function () {
     axios({
@@ -59,8 +62,8 @@ const like = function () {
       }
     })
     .then((res) => {
-      accountStore.isLike = !accountStore.isLike
-      accountStore.getUser(accountStore.user_username)
+      isLike.value = !isLike.value
+
     })
     .catch((err) => {
       console.log(err)

@@ -25,7 +25,6 @@ def movie_list(request, sort_num):
             movies = Movie.objects.filter(release_date__lte=date.today()).order_by('-release_date','popularity')[:500]
             serializers = MovieListSerializer(movies, many=True)
         elif sort_num == 3: # 맞춤 추천
-            movies = []
             # 해당 유저가 좋아하는 음악 장르 추출 vue에서 문자열로 보내줌
             # 정규 표현식을 통해 단어들만 추출
             me = request.user
@@ -37,7 +36,10 @@ def movie_list(request, sort_num):
             for movie in like_movies:
                 for genre in user_genres:
                     users = movie.like_users.filter(music__icontains=genre)
-                    movies = movies.union(users.like_movies.all())
+                    print(me, users)
+                    movies = users[0].like_movies.all()
+                    for user in users[1:]:
+                        movies = movies.union(user.like_movies.all())
             serializers = MovieListSerializer(movies, many=True)
             return Response(serializers.data)
         elif sort_num == 4: # 개봉 예정 영화 금일 부터 가깝고 인기가 많은 순으로 정렬
@@ -128,27 +130,7 @@ def review_detail(request, review_pk):
    elif request.method == 'DELETE':
       review.delete()
       return Response(f"{review_pk}번 게시글 삭제", status=status.HTTP_204_NO_CONTENT)
-
-
-# @api_view(["GET", "POST"])
-# def review_comments(request, review_pk):
-#     review = get_object_or_404(Review, pk=review_pk)
-#     if request.method == 'GET':
-#         comments = review.comment_set.all()
-#         serializers = CommentSerializer(comments, many= True)
-#         return Response(serializers.data)
-#     elif request.method == "POST":
-#         serializer = CommentSerializer(data=request.data)
-#         if serializer.is_valid(raise_exception=True):
-#            serializer.save(review=review)
-#            return Response(serializer.data, status=status.HTTP_201_CREATED)
    
-
-
-# @api_view(["GET"])
-# def review_comment(request, review_pk, comment_pk):
-#    pass
-
 
 # 영화 좋아요
 @api_view(["POST"])
