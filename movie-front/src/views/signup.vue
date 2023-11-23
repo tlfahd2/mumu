@@ -353,9 +353,9 @@ const props = ref({
   align-items: center;
   justify-content: center;
   perspective: 1000px;
-  background: #f3f3f3; 
+  background: rgb(224,224,235);
+  background: radial-gradient(circle, rgba(245,242,241,1) 0%, rgba(123,121,121,1) 31%, rgba(0,0,0,1) 100%);
 }
-
 /* ===========================
     Choose Form
 ============================ */

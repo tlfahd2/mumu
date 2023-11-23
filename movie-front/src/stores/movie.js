@@ -22,7 +22,7 @@ export const useMovieStore = defineStore('movie', () => {
     const getMovieList=(sort_num)=>{
         axios({
             method: 'get',
-            url: `${API_URL}/sort/${sort_num}`,
+            url: `${API_URL}/sort/${sort_num}/page/page_pk`,
             headers: {
               Authorization: `Token ${accountStore.token}`}
           })

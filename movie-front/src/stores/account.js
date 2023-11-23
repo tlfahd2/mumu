@@ -30,7 +30,10 @@ export const useAccountStore = defineStore('account', () => {
         const password = password1
         logIn({ username, password })
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+        router.push({name:'test'})
+      })
   }
 
   const logIn = function (payload) {
