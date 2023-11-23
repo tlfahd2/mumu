@@ -1,9 +1,11 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios, { HttpStatusCode } from 'axios'
-import router from '../router'
+import { useRouter } from 'vue-router'
+
 
 export const useAccountStore = defineStore('account', () => {
+  const router = useRouter()
 
   const API_URL = 'http://127.0.0.1:8000'
   const token = ref(null)
@@ -30,7 +32,23 @@ export const useAccountStore = defineStore('account', () => {
         const password = password1
         logIn({ username, password })
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        if (err.response) {
+          const responseData = err.response.data
+          console.log(responseData)
+          if (responseData.username) {
+            window.alert('이미 있는 아이디입니다 !')
+          } else if (responseData.password1) {
+            window.alert('비밀번호는 최소 8자 이상이어야 합니다 !')
+          } else if (responseData.password2) {
+            window.alert('비밀번호가 맞지 않습니다 !')
+          } else {
+            window.alert('비밀번호를 확인하세요 !')
+          }
+        } 
+        router.push({ name: 'signup'})
+      }
+    )
   }
 
   const logIn = function (payload) {
@@ -46,12 +64,14 @@ export const useAccountStore = defineStore('account', () => {
     .then((res) => {
       token.value = res.data.key
       getUserInfo(token.value)
-      router.push({ name: 'main' })
+      router.push({ name: 'main'})
     })
     .catch((err) => {
       console.log(err)
       window.alert('아이디 또는 비밀번호를 정확히 입력하세요!')
-      })
+      router.push({ name: 'signup'})
+    }
+    )
     }
 
   const isLogin = computed(() => {
@@ -69,6 +89,7 @@ export const useAccountStore = defineStore('account', () => {
     })
     .then((res) => {
       token.value = null
+      router.push({ name: 'signup'})
     })
     .catch((err) => {
       console.log(err)

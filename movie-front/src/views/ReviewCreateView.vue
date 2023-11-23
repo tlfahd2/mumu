@@ -10,18 +10,18 @@
                         <form @submit.prevent="createReview">
                             <div class="modal-header">
                                 <img :src="movieStore.BASE_IMAGE_URL + movie.poster_path" :alt="movie.title"
-                                    style="width: 100px; margin-right: 5px;">
+                                    style="width: 125px; margin-right: 5px;">
                                 <div class="header-content">
                                     <div class="content-rank-container">
                                         <textarea name="내용" id="content" cols="30" rows="5"
                                             v-model.trim="content"></textarea>
                                         <div class="rank-create-container">
                                             <div class="select-container">
-                                                <select v-model="rank">
+                                                <select v-model="rank" class="custom-select">
                                                     <option v-for="score in scores">{{ score }}</option>
                                                 </select>
                                             </div>
-                                            <button type="submit">생성</button>
+                                            <button class="custom-button" type="submit">생성</button>
                                         </div>
                                     </div>
                                 </div>
@@ -34,21 +34,23 @@
                                     <i :class="getStarClass(i, review.rank)"></i>
                                 </template>
                             </div>
-                            <div style="max-width: fit-content;">
-                                <div>
-                                    <span>{{ review.user.username }} | </span>
-                                    <span @click="moveDetail(review.id)" style="cursor: pointer;">{{ review.content }}
-                                    </span>
-                                </div>
-                                <button @click="like"
-                                    v-if="accountStore.isLike === true && accountStore.isHate === false">좋아요 취소</button>
-                                <button @click="like"
-                                    v-if="accountStore.isLike === false && accountStore.isHate === false">좋아요</button>
-                                <button @click="hate"
-                                    v-if="accountStore.isHate === true && accountStore.isLike === false">싫어요 취소</button>
-                                <button @click="hate"
-                                    v-if="accountStore.isLike === false && accountStore.isHate === false">싫어요</button>
-                            </div>
+                        
+<div style="max-width: fit-content;">
+    <div>
+        <span>{{ review.user.username }} | </span>
+        <span @click="moveDetail(review.id)" style="cursor: pointer;">{{ review.content }}</span>
+    </div>
+    <div v-if="accountStore.user_username !== review.user.username">
+        <div style="display: flex; align-items: center; justify-content: flex-end;">
+            <i @click="like(review.id)" v-if="isLike === true" class="bi bi-hand-thumbs-up-fill" style="margin-right: 8px;"></i>
+            <i @click="like(review.id)" v-if="isLike === false" class="bi bi-hand-thumbs-up" style="margin-right: 8px;"></i>
+            <span style="margin-right: 8px;">{{ review.like_users?.length }}</span>
+            <i @click="hate(review.id)" v-if="isHate === true" class="bi bi-hand-thumbs-down-fill" style="margin-right: 8px;"></i>
+            <i @click="hate(review.id)" v-if="isHate === false" class="bi bi-hand-thumbs-down" style="margin-right: 8px;"></i>
+            <span style="margin-right: 8px;">{{ review.hate_users?.length }}</span>
+        </div>
+    </div>
+</div>
                             <hr>
                         </div>
                     </div>
@@ -70,10 +72,12 @@
                                 <p>{{ movieStore.movie_review.content }}</p>
                                 <p>최종 수정 : {{ formatDateTime(movieStore.movie_review.updated_at) }}</p>
                                 <hr>
-                                <button class="btn btn-sm btn-primary" @click="moveUpdate(movieStore.movie_review.id)">리뷰
-                                    수정</button>
-                                <button class="btn btn-sm btn-danger" @click="deleteReview(movieStore.movie_review.id)">리뷰
-                                    삭제</button>
+                                <div v-if="accountStore.user_username === movieStore.movie_review.user.username">
+                                    <button class="custom-button" @click="moveUpdate(movieStore.movie_review.id)">리뷰
+                                        수정</button>
+                                    <button class="custom-button" @click="deleteReview(movieStore.movie_review.id)">리뷰
+                                        삭제</button>
+                                </div>
                             </div>
                             <i class="bi bi-x-octagon" @click="handle_toggle(event)"></i>
                         </div>
@@ -82,18 +86,18 @@
                     <div v-if="selected === 3">
                         <form @submit.prevent="updateReview()">
                             <div class="modal-header">
-                                <i class="bi bi-arrow-left-circle" @click="goMain"></i>
+                                <i  class="bi bi-arrow-left-circle" @click="goMain"></i>
                                 <div class="header-content">
                                     <div class="content-rank-container">
                                         <textarea name="내용" id="content" cols="30" rows="5"
                                             v-model.trim="content"></textarea>
                                         <div class="rank-create-container">
                                             <div class="select-container">
-                                                <select v-model="rank">
+                                                <select class="custom-select" v-model="rank">
                                                     <option v-for="score in scores">{{ score }}</option>
                                                 </select>
                                             </div>
-                                            <button type="submit">수정</button>
+                                            <button class="custom-button" type="submit">수정</button>
                                         </div>
                                     </div>
                                 </div>
@@ -127,6 +131,8 @@ const content = ref('')
 const rank = ref(0)
 const scores = ref([])
 const movie_id = route.params.movie_id
+const isLike = ref(false)
+const isHate = ref(false)
 
 const props = defineProps({
     movie: Object
@@ -134,6 +140,19 @@ const props = defineProps({
 
 onMounted(() => {
     movieStore.getMovieReviewList(movie_id)
+    accountStore.getUser(accountStore.user_username)
+    if (movieStore.movie_review.like_users?.includes(accountStore.user_pk)){
+    isLike.value = true    
+  }
+  else{
+    isLike.value = false
+  }
+  if (movieStore.movie_review.hate_users?.includes(accountStore.user_pk)){
+    isHate.value = true    
+  }
+  else{
+    isHate.value = false
+  }
 })
 
 // 리뷰 생성
@@ -165,6 +184,7 @@ for (let index = 10; index > -1; index--) {
 const handle_toggle = function (event) {
     // console.log(this.is_show)
     this.is_show = !this.is_show
+    selected.value = 1
 }
 
 const moveDetail = function (review_id) {
@@ -173,11 +193,8 @@ const moveDetail = function (review_id) {
 }
 
 // 리뷰 좋아요 싫어요
-onMounted(() => {
-    accountStore.getUser(accountStore.user_username)
-})
 
-const like = function () {
+const like = function (review_id) {
     axios({
         method: 'post',
         url: `${movieStore.API_URL}/like_reviews/${review_id}/${accountStore.user_pk}/`,
@@ -186,15 +203,16 @@ const like = function () {
         }
     })
         .then((res) => {
-            accountStore.isReviewLike = !accountStore.isReviewLike
+            isLike.value = !isLike.value
             accountStore.getUser(accountStore.user_username)
+            movieStore.getMovieReviewList(movie_id)
         })
         .catch((err) => {
             console.log(err)
         })
 }
-
-const hate = function () {
+console.log(accountStore.user)
+const hate = function (review_id) {
     axios({
         method: 'post',
         url: `${movieStore.API_URL}/hate_reviews/${review_id}/${accountStore.user_pk}/`,
@@ -203,8 +221,9 @@ const hate = function () {
         }
     })
         .then((res) => {
-            accountStore.isLike = !accountStore.isLike
+            isHate.value = !isHate.value
             accountStore.getUser(accountStore.user_username)
+            movieStore.getMovieReviewList(movie_id)
         })
         .catch((err) => {
             console.log(err)
@@ -381,9 +400,43 @@ button {
     margin-bottom: 150px;
 }
 
+#content {
+        border-radius: 10px; /* Adds rounded corners */
+        padding: 10px; /* Adds padding inside the textarea */
+        border: 1px solid #ccc; /* Adds a border for better visibility */
+        background-color: #f5f5f5; /* Sets a light background color */
+        resize: none; /* Prevents the textarea from being resized by the user */
+        font-family: 'Arial', sans-serif; /* Specifies the font */
+    }
+
+    .custom-select {
+    border-radius: 10px; /* Adds rounded corners */
+    padding: 8px; /* Adds padding inside the select */
+    border: 1px solid #ccc; /* Adds a border for better visibility */
+    background-color: #f5f5f5; /* Sets a light background color */
+    font-size: 14px; /* Sets the font size */
+    font-family: 'Arial', sans-serif; /* Specifies the font */
+  }
+
+  .custom-button {
+    border-radius: 10px; /* Adds rounded corners */
+    padding: 10px 20px; /* Adds padding inside the button */
+    background-color: #3498db; /* Sets the background color */
+    color: #fff; /* Sets the text color */
+    border: none; /* Removes the default button border */
+    cursor: pointer; /* Changes the cursor to a pointer on hover */
+    font-size: 16px; /* Sets the font size */
+    font-family: 'Arial', sans-serif; /* Specifies the font */
+  }
+
+  .custom-button:hover {
+    background-color: #2980b9; /* Changes the background color on hover */
+  }
+
 .ranking-icons {
     color: #ffc107;
 }
+
 
 /* Add Bootstrap icons styles or import them in your project */
 .bi-star,
