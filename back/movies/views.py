@@ -25,6 +25,7 @@ def movie_list(request, sort_num):
             movies = Movie.objects.filter(release_date__lte=date.today()).order_by('-release_date','popularity')[:500]
             serializers = MovieListSerializer(movies, many=True)
         elif sort_num == 3: # 맞춤 추천
+            movies = None
             # 해당 유저가 좋아하는 음악 장르 추출 vue에서 문자열로 보내줌
             # 정규 표현식을 통해 단어들만 추출
             me = request.user
@@ -36,12 +37,15 @@ def movie_list(request, sort_num):
             for movie in like_movies:
                 for genre in user_genres:
                     users = movie.like_users.filter(music__icontains=genre)
-                    print(me, users)
-                    movies = users[0].like_movies.all()
-                    for user in users[1:]:
-                        movies = movies.union(user.like_movies.all())
-            serializers = MovieListSerializer(movies, many=True)
-            return Response(serializers.data)
+                    if users:
+                        movies = users[0].like_movies.all()
+                        for user in users[1:]:
+                            movies = movies.union(user.like_movies.all())
+            if movies:
+                serializers = MovieListSerializer(movies, many=True)
+                return Response(serializers.data)
+            else:
+                return Response(status=status.HTTP_204_NO_CONTENT)
         elif sort_num == 4: # 개봉 예정 영화 금일 부터 가깝고 인기가 많은 순으로 정렬
             movies = Movie.objects.filter(release_date__gt=date.today()).order_by('release_date', '-popularity')
             serializers = MovieListSerializer(movies, many=True)
@@ -126,6 +130,23 @@ def review_detail(request, review_pk):
       serializer = ReviewSerializer(review, data=request.data)
       if serializer.is_valid(raise_exception=True):
          serializer.save()
+         return Response(serializer.data)
+   elif request.method == 'DELETE':
+      review.delete()
+      return Response(f"{review_pk}번 게시글 삭제", status=status.HTTP_204_NO_CONTENT)
+   
+
+@api_view(["GET", "PUT", "DELETE"])
+def movie_review_detail(request, movie_pk, review_pk):
+   review = get_object_or_404(Review, pk=review_pk)
+   movie = get_object_or_404(Movie, pk=movie_pk)
+   if request.method == 'GET':
+      serializer = ReviewSerializer(review)
+      return Response(serializer.data)
+   elif request.method == "PUT":
+      serializer = ReviewSerializer(review, data=request.data)
+      if serializer.is_valid(raise_exception=True):
+         serializer.save(movie=movie)
          return Response(serializer.data)
    elif request.method == 'DELETE':
       review.delete()

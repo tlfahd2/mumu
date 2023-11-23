@@ -1,12 +1,16 @@
 <template>
-    <main class="main">
-        <div>
+    <main class="main container">
+        <div class="movie-list" v-if="movieStore.result.length === 0">
+            <h3>검색 결과가 없습니다</h3>
+        </div>
+        <div v-else>
             <MovieCard
             v-for="movie in movieStore.result"
             :key="movie.id"
             :movie=movie
             />
         </div>
+
     </main>
 </template>
 
@@ -46,5 +50,9 @@ onBeforeRouteUpdate((to, from) => {
 </script>
 
 <style scoped>
-
+.movie-list{
+    display: flex;
+    flex-wrap: wrap;
+    width: 90vw;
+}
 </style>

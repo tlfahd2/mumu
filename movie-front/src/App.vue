@@ -2,11 +2,9 @@
   <div>
       <header>
         <div>
-          <nav class="navbar fixed-top">
+          <nav class="navbar fixed-top" v-if="accountStore.isLogin">
               <RouterLink class= "nav-item" :to="{ name: 'main' }">홈</RouterLink>
               <RouterLink class= "nav-item" :to="{ name: 'communitymain' }">커뮤니티</RouterLink>
-              <RouterLink class= "nav-item" v-if="accountStore.isLogin === false" :to="{ name: 'SignUpView' }">회원가입</RouterLink>
-              <RouterLink class= "nav-item" v-if="accountStore.isLogin === false" :to="{ name: 'LogInView' }">로그인</RouterLink>
               <RouterLink class= "nav-item" v-if="accountStore.isLogin === true" @click="accountStore.logOut" :to="{ name: 'main' }">로그아웃</RouterLink>
               <RouterLink class= "nav-item" v-if="accountStore.isLogin === true" :to="{ name: 'change_password' }">비밀번호 변경</RouterLink>
               <form class="d-flex" role="search" @submit.prevent="getSearchMovie">

@@ -109,9 +109,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-KR'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -160,11 +160,11 @@ REST_AUTH = {
 
 ACCOUNT_ADAPTER = 'accounts.models.CustomAccountAdapter'
 
-# import environ, os
+import environ, os
 
-# env = environ.Env(DEBUG=(bool, True))
-# # 환경 변수 파일 읽어오기
-# environ.Env.read_env(
-#     env_file=os.path.join(BASE_DIR, '.env')
-#     )
-# TMDB_API = env('TMDB_API')
+env = environ.Env(DEBUG=(bool, True))
+# 환경 변수 파일 읽어오기
+environ.Env.read_env(
+    env_file=os.path.join(BASE_DIR, '.env')
+    )
+TMDB_API = env('TMDB_API')

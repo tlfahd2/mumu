@@ -1,5 +1,5 @@
 <template>
-    <main class="main">
+    <main class="main container">
         <div>
             <form @submit.prevent="createArticle">
                 <label for="title">제목</label>

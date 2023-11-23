@@ -7,9 +7,10 @@
           <span id="arrowClick" class="form-container__arrow" ref="form-container__arrow"><i class="bi bi-arrow-circle-left"
               aria-hidden="true"></i></span>
               <div class="choose-form" v-if="selected === 1">
-                <div class="overlay" ref="overlay"></div>
+                <div class="overlay" ref="overlay" :style="{ background: randomBackground }"></div>
             <div class="title" ref="title">
-              <h1 class="title__h1">Welcome<br>Start for free</h1>
+              <h1 class="title__h1">뮤무<br><br></h1>
+              <h3>영화에 음악을 더하다</h3>
             </div>
             <div class="buttons">
               <button @click="handleSignUp" class="buttons__signup" ref="buttons__signup">Sign up</button>
@@ -308,12 +309,25 @@ const props = ref({
     const goMain = function () {
       selected.value = 1
     }
-  // document.getElementById("arrowClick").onclick = function (){
 
-  //   const properties = [props.leftM120, props.opacity1, props.opacity1, props.opacity1, props.opacity1, `${props.opacity0} ${props.trnsDelay0} ${props.zIndex0}`, `${props.opacity0} ${props.trnsDelay0} ${props.zIndex0}`]
-  
-  //   transition(elms, properties)
-  // }
+    // 배경 이미지 랜덤
+    const backgrounds = [
+    'https://img.movist.com/?img=/x00/04/84/38_p1.jpg',
+    'https://cdnimage.dailian.co.kr/news/202310/news_1697068872_1282050_m_1.jpeg',
+    'https://redmilk.co.kr/wp-content/uploads/2017/03/movie_image-4.jpg',
+    'https://dimg.donga.com/wps/NEWS/IMAGE/2019/01/10/93645479.3.jpg',
+    'https://i.namu.wiki/i/aRAQu813Cdn2FJ5Uo3bxqMPqxGnQX7qSHbGsQiiKBbzruZKKKXOjBmVQuietbkSvq54sGhe7RFKa16HqIsLyFQ.webp',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQfajmLzmwNIpIutVvy0ghbVC_iChzLXjctA&usqp=CAU',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6LblkmM1tW1uUSAa_j6WMLG0RKtaHaeaP2Q&usqp=CAU',
+    'https://t1.daumcdn.net/movie/07c5dc233775f21069b730f4ec6255e9e9bb4174',
+    'https://cdn.e-fastnews.com/news/photo/202203/1476_1488_226.jpg',
+    ]
+
+    const randomBackground = computed(() => {
+        const randomIndex = Math.floor(Math.random() * backgrounds.length);
+        const randomImage = backgrounds[randomIndex];
+        return `#3ba4fa url(${randomImage}) center/cover no-repeat`;
+    }) 
 
 </script>
 
@@ -397,8 +411,8 @@ const props = ref({
   -moz-transition: opacity 2s;
   -o-transition: opacity 2s;
   transition: opacity 2s;
-  background: #3ba4fa url(https://i.ibb.co/dkW0tm9/img-1.png) center no-repeat;
   background-size: contain; 
+  filter: blur(1px);
 }
 
 @keyframes fadeInTitle{

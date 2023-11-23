@@ -5,7 +5,7 @@
         <hr>
         <p>{{ review.content }}</p>
         <p>{{ review.rank }}</p>
-        <p>최종 수정일 :{{ review.updated_at }}</p>
+        <p>최종 수정 : {{ formatDateTime(review.updated_at) }}</p>
         <hr>
         <button class="btn btn-sm btn-primary" @click="updateReview">리뷰 수정</button>
         <button class="btn btn-sm btn-danger" @click="deleteReview()">리뷰 삭제</button>
@@ -19,7 +19,6 @@ import { useAccountStore } from '../stores/account'
 import { useMovieStore } from '../stores/movie'
 import { useCommunityStore } from '../stores/community'
 import axios from 'axios'
-import CommentCard from '../components/CommentCard.vue'
 
 const props = defineProps({
     review:Object
@@ -46,37 +45,22 @@ const deleteReview = ()=>{
         router.push({name:'communitymain'})
     })
 }
-// const createComment= (article_pk) => {
-//     axios({
-//         method: 'post',
-//         url: `${communityStore.API_URL}/${article_pk}/comments/`,
-//         data: {
-//             content :commentContent.value, 
-//         },
-//         headers: {
-//         Authorization: `Token ${accountStore.token}`}
-//     }).then((response)=>{
-//         console.log('댓글 생성 완료')
-//         commentContent.value = ''
-//         communityStore.getCommentList(article_pk)
-//     }).catch((err)=>{
-//         console.log(err)
-//     })
-// }
 
-// const deleteComment = (args) =>{
-//     axios({
-//         method:'delete',
-//         url: `${communityStore.API_URL}/${args.articleId}/comments/${args.commentId}`,
-//         headers: {
-//             Authorization: `Token ${accountStore.token}`}
-//     }
-//     ).then((response)=>{
-//         console.log(response.data)
-//         communityStore.getCommentList(args.articleId)
-//     })
-// }
+// 최종 수정 예쁘게
+const formatDateTime = function (dateTimeString) {
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      };
+      const date = new Date(dateTimeString);
+      const formattedDate = date.toLocaleString('ko-KR', options);
 
+      return formattedDate
+}
 
 </script>
 

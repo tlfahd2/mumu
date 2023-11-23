@@ -5,17 +5,21 @@
             :movie="movie"
             />
             <section>
-                <div class="credits">
-                    <p class="tag">감독/출연</p>
-                    <div>
-                        <PersonCard
-                        :person="movie.director"
-                        />
-                        <PersonCard
-                        v-for="actor in movie.actors"
-                        :key="actor.id"
-                        :person="actor"
-                        />
+                <div class="credits-container">
+                    <div class="credits-container2">
+                        <div class="credits">
+                            <p class="tag">감독/출연</p>
+                            <div class="person-cards">
+                                <PersonCard
+                                :person="movie.director"
+                                />
+                                <PersonCard
+                                v-for="actor in movie.actors"
+                                :key="actor.id"
+                                :person="actor"
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -32,7 +36,6 @@ import axios from 'axios'
 
 import MovieDetailCard from '../components/MovieDetailCard.vue'
 import PersonCard from '../components/PersonCard.vue'
-import router from '../router'
 import ReviewCreateView from './ReviewCreateView.vue'
 
 
@@ -56,12 +59,34 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.main{
-    padding-top: 5.8rem;
+.credits-container {
+  overflow-x: auto; /* Enable horizontal scrolling if content overflows */
 }
+
+.credits-container2 {
+  width: 100%;
+  overflow-x: auto /* Take the full width of the container */
+}
+
 .credits{
     display: flex;
-    border:1px solid
+    flex-wrap: wrap;
+    border:1px solid;
+    min-width: fit-content
+}
+
+.person-cards {
+    display: flex;
+    gap: 10px; /* Add some gap between cards */
+    overflow-x: auto; 
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  outline: none;
 }
 
 </style>

@@ -1,16 +1,13 @@
 <template>
-    <main class="main">
-        <div>
+    <main class="main container">
+      <div>
         <h1>{{ accountStore.user.username }}의 프로필</h1>
-        {{ isFollow }}
         <button @click="follow" v-if="isFollow === true">팔로우 취소</button>
         <button @click="follow" v-else>팔로우</button>
         <p @click="follow_list()" type="button">팔로워 : {{ accountStore.user.followers?.length }}</p>
         <p>팔로잉 : {{ accountStore.user.followings?.length }}</p>
         <p v-for="follower in accountStore.user.followers"> {{follower.username }}</p>
-        <!-- v-if="isFollowListModalVisible === true" 
-        @close="closeFollowListModal"  -->
-    </div>
+      </div>
     </main>
 </template>
 
@@ -57,15 +54,6 @@ const follow = function () {
     .catch((err) => {
       console.log(err)
     })
-}
-
-
-const openFollowListModal = function () {
-  isFollowListModalVisible.value = true
-}
-
-const closeFollowListModal = function () {
-  isFollowListModalVisible.value = false
 }
 
 const follow_list = function() {

@@ -1,5 +1,5 @@
 <template>
-    <main class="main">
+    <main class="main container">
         <div>
             <section>
                 <h1>커뮤니티</h1>

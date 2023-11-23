@@ -1,5 +1,5 @@
 <template>
-    <main class="main">
+    <main class="main container">
         <div>
             <ArticleCard
             :article="communityStore.article"

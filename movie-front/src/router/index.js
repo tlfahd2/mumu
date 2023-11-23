@@ -29,7 +29,7 @@ const router = createRouter({
       component: ChangePasswordView
     },
     {
-      path: '/',
+      path: '/main',
       name: 'main',
       component: MainView
     },
@@ -94,7 +94,7 @@ const router = createRouter({
       component: () => import('../components/FollowListModal.vue')
     },
     {
-      path: '/test',
+      path: '/',
       name: 'test',
       component: () => import('../views/signup.vue')
     },

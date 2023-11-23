@@ -16,6 +16,7 @@ export const useMovieStore = defineStore('movie', () => {
     const review = ref([])
     const movie_reviews = ref([])
     const result = ref([])
+    const movie_review = ref({})
 
 
     const getMovieList=(sort_num)=>{
@@ -98,17 +99,19 @@ export const useMovieStore = defineStore('movie', () => {
       })
     }
     
-      // else if (choice_num === 2){
-      //   axios({
-      //     method: 'get',
-      //     url: `${API_URL}/reviews/`
-      //   }).then((response)=>{
-      //       reviews.value = response.data
-      //   }).catch((err)=>{
-      //       console.log(err)
-      //   })
-      // }
+    const getMovieReviewDetail = (movie_id, review_id) => {
+      axios({
+        method: 'get',
+        url: `${API_URL}/${movie_id}/reviews/${review_id}/`,
+        headers: {
+          Authorization: `Token ${accountStore.token}`}
+      }).then((response)=>{
+          movie_review.value = response.data
+      }).catch((err)=>{
+          console.log(err)
+      }) 
+    }
 
 
-  return { movies, movie, genres, reviews, review, movie_reviews, result, API_URL, BASE_IMAGE_URL, getMovieList, getGenreList, getReviewList, getReview, getMovieReviewList, getSerchResult }
+  return { movies, movie, genres, reviews, review, movie_reviews, movie_review, result, API_URL, BASE_IMAGE_URL, getMovieList, getGenreList, getReviewList, getReview, getMovieReviewList, getSerchResult, getMovieReviewDetail }
 }, { persist:true })
