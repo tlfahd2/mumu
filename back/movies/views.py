@@ -88,7 +88,7 @@ def review_list(request):
 def movie_review_list(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
     if request.method == 'GET':
-        reviews = movie.review_set.all()
+        reviews = movie.review_set.all().order_by("-created_at")
         serializers = ReviewSerializer(reviews, many= True)
         return Response(serializers.data)
     elif request.method == "POST":
