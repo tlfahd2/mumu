@@ -25,7 +25,6 @@ def movie_list(request, sort_num):
             movies = Movie.objects.filter(release_date__lte=date.today()).order_by('-release_date','popularity')[:500]
             serializers = MovieListSerializer(movies, many=True)
         elif sort_num == 3: # 맞춤 추천
-            movies = []
             # 해당 유저가 좋아하는 음악 장르 추출 vue에서 문자열로 보내줌
             # 정규 표현식을 통해 단어들만 추출
             me = request.user
@@ -37,7 +36,9 @@ def movie_list(request, sort_num):
             for movie in like_movies:
                 for genre in user_genres:
                     users = movie.like_users.filter(music__icontains=genre)
-                    for user in users:
+                    print(me, users)
+                    movies = users[0].like_movies.all()
+                    for user in users[1:]:
                         movies = movies.union(user.like_movies.all())
             serializers = MovieListSerializer(movies, many=True)
             return Response(serializers.data)

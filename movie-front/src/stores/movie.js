@@ -10,11 +10,13 @@ export const useMovieStore = defineStore('movie', () => {
     const accountStore = useAccountStore()
 
     const movies = ref([])
+    const movie = ref({})
     const genres = ref([])
     const reviews = ref([])
     const review = ref([])
     const movie_reviews = ref([])
     const result = ref([])
+
 
     const getMovieList=(sort_num)=>{
         axios({
@@ -108,5 +110,5 @@ export const useMovieStore = defineStore('movie', () => {
       // }
 
 
-  return { movies, genres, reviews, review, movie_reviews, result, API_URL, BASE_IMAGE_URL, getMovieList, getGenreList, getReviewList, getReview, getMovieReviewList, getSerchResult }
+  return { movies, movie, genres, reviews, review, movie_reviews, result, API_URL, BASE_IMAGE_URL, getMovieList, getGenreList, getReviewList, getReview, getMovieReviewList, getSerchResult }
 }, { persist:true })

@@ -42,14 +42,17 @@ const movie_id = route.params.movie_id
 
 const movie = ref({})
 
-axios({
-        method:'get',
-        url : `${movieStore.API_URL}/detail/${movie_id}`
-    }).then((response)=>{
-        movie.value = response.data
-    }).catch((error)=>{
-        console.log(error)
-    })
+onMounted(() => {
+    axios({
+            method:'get',
+            url : `${movieStore.API_URL}/detail/${movie_id}`
+        }).then((response)=>{
+            movie.value = response.data
+            movieStore.movie = response.data
+        }).catch((error)=>{
+            console.log(error)
+        })
+})
 </script>
 
 <style scoped>

@@ -2,6 +2,7 @@
     <main class="main">
         <div>
         <h1>{{ accountStore.user.username }}의 프로필</h1>
+        {{ isFollow }}
         <button @click="follow" v-if="isFollow === true">팔로우 취소</button>
         <button @click="follow" v-else>팔로우</button>
         <p @click="follow_list()" type="button">팔로워 : {{ accountStore.user.followers?.length }}</p>
@@ -28,16 +29,18 @@ const route = useRoute()
 const isFollow = ref(false)
 const isFollowListModalVisible = ref(false)
 
-
-onMounted(() => {
+onMounted(()=>{
   accountStore.getUser(route.params.username)
-  accountStore.user.followers.forEach((follower)=>{
-    if( accountStore.user_username === follower.username ){
+  setTimeout(()=>{
+    console.log(accountStore.user)
+    if( accountStore.user.followers?.find((follower)=> follower.id === accountStore.user_pk)){
       isFollow.value = true
     }
-  })
+    else{
+      isFollow.value = false
+    }
+    },100)
 })
-
 
 const follow = function () {
     axios({

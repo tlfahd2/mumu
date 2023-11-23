@@ -12,7 +12,6 @@ export const useAccountStore = defineStore('account', () => {
   const follower = ref('')
   const following = ref('')
   const user = ref({})
-  const isFollow = ref(false)
   const isLike = ref(false)
   const isReviewLike = ref(false)
   const isReviewHate = ref(false)
@@ -139,5 +138,5 @@ export const useAccountStore = defineStore('account', () => {
       })
     }
 
-  return { API_URL, signUp, logIn, token, isLogin, logOut, change_password, user_pk, getUserInfo, user_username, follower, following, user, getUser, isFollow, isLike, isReviewLike, isReviewHate }
+  return { API_URL, signUp, logIn, token, isLogin, logOut, change_password, user_pk, getUserInfo, user_username, follower, following, user, getUser, isLike, isReviewLike, isReviewHate }
 }, { persist: true} )
