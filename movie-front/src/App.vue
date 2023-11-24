@@ -46,13 +46,14 @@
 
 
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import { ref, computed, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useAccountStore } from './stores/account.js'
-import { useMovieStore } from './stores/movie.js'
-import axios from 'axios'
-import ProfileView from './views/ProfileView.vue'
+import { RouterLink, RouterView } from "vue-router";
+import { ref, computed, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useAccountStore } from "./stores/account.js";
+import { useMovieStore } from "./stores/movie.js";
+import axios from "axios";
+import ProfileView from "./views/ProfileView.vue";
+// import ModifyPwd from "./views/ModifyPwd.vue";
 
 const showModify = ref(false);
 const movieStore = useMovieStore()
@@ -60,54 +61,49 @@ const accountStore = useAccountStore()
 const router = useRouter()
 const showModdal = ref(false);
 onMounted(() => {
-  movieStore.getMovieList(1)
-})
+  movieStore.getMovieList(1);
+});
 
-const searchInput = ref('')
+const searchInput = ref("");
 
-const getSearchMovie = ()=>{
-  movieStore.getSerchResult(searchInput)
-  router.push({name : 'search', params:{keyword : searchInput.value}})
-  searchInput.value=''
-}
-
-
+const getSearchMovie = () => {
+  movieStore.getSerchResult(searchInput);
+  router.push({ name: "search", params: { keyword: searchInput.value } });
+  searchInput.value = "";
+};
 </script>
 
-<style  scoped>
+<style scoped>
 @font-face {
   font-family: "euljiro";
-  src: url("fonts/BMEuljiro10yearslater.ttf")
+  src: url("fonts/BMEuljiro10yearslater.ttf");
 }
-.main{
+.main {
   padding-top: 5.8rem;
 }
-.navbar{
+.navbar {
   height: 70px;
   padding-left: 8rem;
   padding-right: 8rem;
-  font-family: 'euljiro';
+  font-family: "euljiro";
   font-size: 30px;
   /* background-color: #00264B; */
-  background-color: #BDCEBE;
+  background-color: #bdcebe;
 }
-.nav-item{
+.nav-item {
   display: inline-block;
   text-decoration: none;
-  color:#10AF85;
-  text-transform:uppercase;
+  color: #10af85;
+  text-transform: uppercase;
 }
 .nav-item:after {
-  display:block;
-  content: '';
-  border-bottom: solid 5px #0B685A;  
-  transform: scaleX(0);  
+  display: block;
+  content: "";
+  border-bottom: solid 5px #0b685a;
+  transform: scaleX(0);
   transition: transform 250ms ease-in-out;
 }
-.nav-item:hover:after{
+.nav-item:hover:after {
   transform: scaleX(1);
 }
-
-
-
 </style>

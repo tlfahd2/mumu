@@ -1,79 +1,20 @@
 <template>
-  <main class="main container">
-    <div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div v-if="selected === 1">
-        <div class="modal-header">
-          <div class="profile">
-            <hr>
-            <p>{{ accountStore.user.name }}</p>
-            <hr>
-            <div v-if="accountStore.user_username !== accountStore.user.username">
-              <button @click="follow" v-if="isFollow === true">팔로우 취소</button>
-              <button @click="follow" v-else>팔로우</button>
+  <transition name="modal">
+    <div class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+          <div class="modal-header">
+            <div class="modal-body">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">{{ accountStore.user.name }}님의 프로필</h1>
             </div>
-            <p @click="goFollowerList" type="button">팔로워 : {{ accountStore.user.followers?.length }}</p>
-            <p @click="goFollowingList" type="button">팔로잉 : {{ accountStore.user.followings?.length }}</p>
-            <hr>
-            <p>좋아하는 음악 장르 : {{ accountStore.user.music.replace(/"/g, '')}}</p>
-            <hr>
-            <p>좋아요 한 영화</p>
-            <div v-for="movie in accountStore.user.like_movies">
-              {{ movie.title }}
-                <MovieCard :movie="movie"/>
-            </div>
-            <div v-if="accountStore.user_username === accountStore.user.username">
-              <RouterLink class= "nav-item" :to="{ name: 'change_password' }">비밀번호 변경</RouterLink>
-            </div>
+            <div class="modal-body">
+              내용
           </div>
-          <i class="bi bi-x-octagon" @click="handle_toggle(event)"></i>
-        </div>
-      </div>
-
-      <!-- 팔로우 리스트 -->
-      <div v-if="selected === 2">
-        <div class="modal-header">
-          <i class="bi bi-arrow-left-circle" @click="goMain"></i>
-          <div class="profile">
-            <hr>
-            <div v-for="follower in accountStore.user.followers" style="max-width: fit-content;">
-              <p @click="goUser(follower.username)" style="cursor: pointer;">{{ follower.username }}</p>
-              <hr>
-            </div>
           </div>
-          <i class="bi bi-x-octagon" @click="handle_toggle(event)"></i>
-        </div>
-      </div>
-
-      <div v-if="selected === 3">
-        <div class="modal-header">
-          <i class="bi bi-arrow-left-circle" @click="goMain"></i>
-          <div class="profile">
-            <hr>
-            <div v-for="following in accountStore.user.followings" style="max-width: fit-content;">
-              <p @click="goUser(following.username)" style="cursor: pointer;">{{ following.username }}</p>
-              <hr>
-            </div>
-          </div>
-          <i class="bi bi-x-octagon" @click="handle_toggle(event)"></i>
         </div>
       </div>
     </div>
-    </div>
-  </div>
-</div>
-    </div>
-  </main>
+  </transition>
 </template>
 
 <script setup>

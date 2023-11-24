@@ -14,7 +14,7 @@ import router from './router'
 const app = createApp(App)
 const pinia = createPinia()
 
-app.component("infinite-loading", InfiniteLoading)
+// app.component("infinite-loading", InfiniteLoading)
 pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(router)

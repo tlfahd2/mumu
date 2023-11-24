@@ -211,7 +211,7 @@ const like = function (review_id) {
             console.log(err)
         })
 }
-console.log(accountStore.user)
+
 const hate = function (review_id) {
     axios({
         method: 'post',
