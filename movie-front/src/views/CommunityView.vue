@@ -36,7 +36,25 @@
               <template v-for="i in 5">
                   <i :class="getStarClass(i, review.rank)"></i>
               </template>
-          </div>
+            </div>
+            <!-- <div v-if="accountStore.user_username !== review.user.username"> -->
+      <!-- <div style="display: flex; align-items: center; justify-content: flex-end;">
+          <i @click="like(review.id)" v-if="isLike === true" class="bi bi-hand-thumbs-up-fill" style="margin-right: 8px;"></i>
+          <i @click="like(review.id)" v-if="isLike === false" class="bi bi-hand-thumbs-up" style="margin-right: 8px;"></i>
+          <span style="margin-right: 8px;">{{ review.like_users?.length }}</span>
+          <i @click="hate(review.id)" v-if="isHate === true" class="bi bi-hand-thumbs-down-fill" style="margin-right: 8px;"></i>
+          <i @click="hate(review.id)" v-if="isHate === false" class="bi bi-hand-thumbs-down" style="margin-right: 8px;"></i>
+          <span style="margin-right: 8px;">{{ review.hate_users?.length }}</span>
+      </div> -->
+  <!-- </div> -->
+  <!-- <div v-if="accountStore.user_username === review.user.username">
+      <div style="display: flex; align-items: center; justify-content: flex-end;">
+          <i class="bi bi-hand-thumbs-up-fill" style="margin-right: 8px;"></i>
+          <span style="margin-right: 8px;">{{ review.like_users?.length }}</span>
+          <i class="bi bi-hand-thumbs-down-fill" style="margin-right: 8px;"></i>
+          <span style="margin-right: 8px;">{{ review.hate_users?.length }}</span>
+      </div>
+  </div> -->
         </div>
       </div>
     </div>
@@ -63,8 +81,23 @@ const movieStore = useMovieStore()
 const choice = ref(1)
 const movies = ref([])
 
+const isLike = ref(false)
+const isHate = ref(false)
+
 onMounted(() => {
     communityStore.getArticleList()
+    if (movieStore.movie_review.like_users?.includes(accountStore.user_pk)){
+    isLike.value = true    
+  }
+  else{
+    isLike.value = false
+  }
+  if (movieStore.movie_review.hate_users?.includes(accountStore.user_pk)){
+    isHate.value = true    
+  }
+  else{
+    isHate.value = false
+  }
 })
 
 const createArticle = () => {
@@ -101,6 +134,42 @@ const getStarClass = (index, rank) => {
     }
 };
 
+// 리뷰 좋아요 싫어요
+const like = function (review_id) {
+    axios({
+        method: 'post',
+        url: `${movieStore.API_URL}/like_reviews/${review_id}/${accountStore.user_pk}/`,
+        headers: {
+            Authorization: `Token ${accountStore.token}`
+        }
+    })
+        .then((res) => {
+            isLike.value = !isLike.value
+            accountStore.getUser(accountStore.user_username)
+            movieStore.getMovieReviewList(movie_id)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+const hate = function (review_id) {
+    axios({
+        method: 'post',
+        url: `${movieStore.API_URL}/hate_reviews/${review_id}/${accountStore.user_pk}/`,
+        headers: {
+            Authorization: `Token ${accountStore.token}`
+        }
+    })
+        .then((res) => {
+            isHate.value = !isHate.value
+            accountStore.getUser(accountStore.user_username)
+            movieStore.getMovieReviewList(movie_id)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
 
 </script>
 

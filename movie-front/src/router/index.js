@@ -67,24 +67,24 @@ const router = createRouter({
       component : () => import('../views/ReviewDetailView.vue')
     },
     {
-      path:'/:movie_id/reviews',
-      name:'movieReviews',
-      component : () => import('../views/MovieReviewsView.vue')
-    },
-    {
       path: `/:username`,
       name: 'profile',
       component: () => import('../views/ProfileView.vue')
     },
     {
-      path: `/:username/follow`,
+      path: `/:username/follower`,
       name: 'follow',
-      component: () => import('../components/FollowListModal.vue')
+      component: () => import('../components/FollowList.vue')
+    },
+    {
+      path: `/:username/following`,
+      name: 'following',
+      component: () => import('../components/FollowingList.vue')
     },
     {
       path: '/',
       name: 'signup',
-      component: () => import('../views/signup.vue')
+      component: () => import('../views/SignUp.vue')
     },
   ]
 })

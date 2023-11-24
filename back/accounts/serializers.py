@@ -51,6 +51,7 @@ class UserSerializer(serializers.ModelSerializer):
             model = User
             fields = ('id','username',)
     followers = FollowSerializer(many=True)
+    followings = FollowSerializer(many=True)
     class MovieSerializer(serializers.ModelSerializer):
         class Meta:
             model = Movie

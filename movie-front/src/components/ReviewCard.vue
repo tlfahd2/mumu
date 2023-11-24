@@ -25,13 +25,16 @@ import { useAccountStore } from '../stores/account'
 import { useMovieStore } from '../stores/movie'
 import { useCommunityStore } from '../stores/community'
 import axios from 'axios'
+const accountStore = useAccountStore()
+const movieStore = useMovieStore()
 
 const props = defineProps({
     review:Object
 })
 
-const movieStore = useMovieStore()
-const accountStore = useAccountStore()
+onMounted(() => {
+  accountStore.getUser(accountStore.user_username)
+})
 const router = useRouter()
 const commentContent = ref('')
 
