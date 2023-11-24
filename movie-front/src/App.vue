@@ -3,6 +3,7 @@
     <header>
       <div>
         <nav class="navbar fixed-top" v-if="accountStore.isLogin">
+          <img src="@/img/logo.png" alt="로고" style="width: 30px;">
           <RouterLink class="nav-item" :to="{ name: 'main' }">홈</RouterLink>
           <RouterLink class="nav-item" :to="{ name: 'communitymain' }">커뮤니티</RouterLink>
           <form class="d-flex" role="search" @submit.prevent="getSearchMovie">
@@ -38,9 +39,6 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAccountStore } from "./stores/account.js";
 import { useMovieStore } from "./stores/movie.js";
-import axios from "axios";
-import ProfileView from "./views/ProfileView.vue";
-import test from "./views/test.vue";
 
 
 const showModify = ref(false);

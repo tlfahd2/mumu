@@ -4,13 +4,6 @@
         <div class="review-container">
   <ReviewCard :review="movieStore.review" style="width: 60%;" />
 </div>
-
-          <div v-if="accountStore.user_username !== user.username">
-          <button @click="like" v-if="isLike === true">좋아요 취소</button>
-          <button @click="like" v-if="isLike === false && isHate === false">좋아요</button>
-          <button @click="hate" v-if="isHate === true">싫어요 취소</button>
-          <button @click="hate" v-if="isLike === false && isHate === false">싫어요</button>
-      </div>
       </div>
   </main>
   
@@ -31,13 +24,12 @@ const route = useRoute()
 const review_id = route.params.review_id
 const user = ref({})
 
-const isLike = ref('')
-const isHate = ref('')
-
+const review = ref({})
 
 onMounted(()=>{
   movieStore.getReview(review_id)
 })
+
 
 const getUser = function () {
   axios({
@@ -55,40 +47,6 @@ const getUser = function () {
   })
 }
 getUser()
-
-const like = function () {
-  axios({
-    method: 'post',
-    url: `${movieStore.API_URL}/like_reviews/${review_id}/${accountStore.user_pk}/`,
-    headers: {
-      Authorization: `Token ${accountStore.token}`
-    }
-  })
-  .then((res) => {
-      getUser()
-      isLike.value = res.data
-  })
-  .catch((err) => {
-    console.log(err)
-  })
-}
-
-const hate = function () {
-  axios({
-    method: 'post',
-    url: `${movieStore.API_URL}/hate_reviews/${review_id}/${accountStore.user_pk}/`,
-    headers: {
-      Authorization: `Token ${accountStore.token}`
-    }
-  })
-  .then((res) => {
-      getUser()
-      isHate.value = res.data
-  })
-  .catch((err) => {
-    console.log(err)
-  })
-}
 
 
 </script>

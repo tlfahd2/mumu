@@ -21,12 +21,6 @@ class ActorSerializer(serializers.ModelSerializer):
         fields = ('name', 'profile_path','another_name')
 
 
-# class CharacterSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Character
-#         fields = '__all__'
-
-
 class MovieListSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(many=True)
     director = DirectorSerializer()

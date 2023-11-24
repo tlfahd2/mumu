@@ -1,7 +1,6 @@
 <template>
   <main class="main container">
     <div class="user-profile">
-      <div class="modal-header">
         <div class="profile">
           <hr>
           <p class="username">{{ accountStore.user.name }}</p>
@@ -15,9 +14,11 @@
           <hr>
           <p>좋아하는 음악 장르: {{ accountStore.user.music.replace(/"/g, '') }}</p>
           <hr>
-          <p>좋아요 한 영화</p>
-          <div v-for="movie in accountStore.user.like_movies" :key="movie.id" class="liked-movie">
-            <MovieCard :movie="movie" />
+          <div v-if="accountStore.user.like_movies.length > 0">
+      <p>좋아요 한 영화</p>
+      <div class="liked-movies-container">
+        <div v-for="movie in accountStore.user.like_movies" :key="movie.id" class="liked-movie">
+          <MovieCard :movie="movie" />
           </div>
           <div v-if="accountStore.user_username === accountStore.user.username" class="change-password-link">
             <RouterLink :to="{ name: 'change_password' }">비밀번호 변경</RouterLink>
@@ -25,13 +26,14 @@
         </div>
       </div>
     </div>
+    </div>
   </main>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useAccountStore } from '../stores/account'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import axios from 'axios'
 import MovieCard from '../components/MovieCard.vue'
 
@@ -49,7 +51,7 @@ const props = defineProps({
 
 console.log(props.username)
 onMounted(() => {
-  accountStore.getUser(props.username)
+  accountStore.getUser(route.params.username)
   setTimeout(() => {
     if (accountStore.user.followers?.find((follower) => follower.id === accountStore.user_pk)) {
       isFollow.value = true
@@ -77,33 +79,40 @@ const follow = function () {
     })
 }
 
-const handle_toggle = function (event) {
-  // console.log(this.is_show)
-  this.is_show = !this.is_show
-}
+onBeforeRouteUpdate((to, from) => {
+    username = to.params.username
+    axios({
+    method : 'post',
+    url : `${accountStore.API_URL}/api/v1/accounts/${username}/`,
+    headers: {
+      Authorization: `Token ${accountStore.token}`
+    }
+
+    }).then((response)=>{
+        user.value = response.data
+    })
+})
 
 const goFollowerList = function () {
-  router.push({name: follow, params: {username: accountStore.user.username}})
+  router.push({name: 'follow', params: {username: accountStore.user.username}})
 }
 
 const goFollowingList = function () {
-  selected.value = 3
+  router.push({name: 'following', params: {username: accountStore.user.username}})
 }
 
-const goUser = function (username) {
-  selected.value = 1
-  accountStore.getUser(username)
-}
 
-const goMain = function () {
-  selected.value = 1
-}
 </script>
 
 <style scoped>
+
+@font-face {
+  font-family: "yeonsung";
+  src: url("../fonts/BMYEONSUNG_ttf.ttf")
+}
 .user-profile {
   margin-top: 20px;
-  width: fit-content;
+  font-family: "yeonsung";
 }
 
 .modal-header {
@@ -154,10 +163,22 @@ const goMain = function () {
 }
 
 .liked-movie {
+  display: flex;
+  flex-wrap: wrap;
   margin-bottom: 10px;
 }
 
 .change-password-link {
   margin-top: 20px;
 }
+
+.liked-movies-container {
+    display: flex;
+    overflow-x: auto; /* 가로 스크롤을 추가할 경우 */
+  }
+
+  .liked-movie {
+    flex: 0 0 auto;
+    margin-right: 10px; /* 각 영화 사이의 간격 조절 */
+  }
 </style>

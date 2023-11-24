@@ -10,9 +10,11 @@
         <p class="content">{{ article.content }}</p>
       </div>
       <hr>
+      <div v-if="accountStore.user_username === article.user.username">
       <div class="button-container">
         <button class="bi bi-pencil" style="border: none; background-color: transparent; margin-right: 10px;" @click="updateArticle"></button>
         <button class="bi bi-trash" style="border: none; background-color: transparent; margin-right: 10px;" @click="deleteArticle"></button>
+      </div>
       </div>
       <form class="comment-form" @submit.prevent="createComment(article.id)">
         <input type="text" placeholder="댓글을 입력해주세요" v-model="commentContent" class="comment-input">

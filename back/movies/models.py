@@ -57,17 +57,6 @@ class Comment(models.Model):
     content = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
-# class Character(models.Model):
-#     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-#     actor = models.ForeignKey(Actor, on_delete=models.CASCADE, related_name='actor_character')
-#     character = models.CharField(max_length=100)
-
-
-
-# class Rank(models.Model):
-#     review = models.ForeignKey(Review, on_delete=models.CASCADE)
-#     score = models.FloatField()
 
 
 

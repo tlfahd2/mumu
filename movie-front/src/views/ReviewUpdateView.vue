@@ -7,7 +7,7 @@
           <select v-model="rank">
                     <option v-for="score in scores"> {{ score }}</option>
                 </select>
-          <button class="bi bi-pencil" style="border: none; background-color: transparent; margin-right: 10px; " @click="updateReview()"></button>
+          <button class="bi bi-pencil" style="border: none; background-color: transparent; margin-right: 10px; " @click="updateReview"></button>
         </form>
       </div>
     </main>
@@ -15,10 +15,9 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter, useRoute, routeLocationKey } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAccountStore } from '../stores/account'                            
 import { useMovieStore } from '../stores/movie'
-import { useCommunityStore } from '../stores/community'
 import axios from 'axios'
 
 const movieStore = useMovieStore()
@@ -30,7 +29,6 @@ const review_id =  route.params.review_id
 const content = ref('')
 const rank = ref('')
 const scores = ref([])
-const movie = ref({})
 const movie_id = ref('')
 
 onMounted(()=>{
@@ -61,14 +59,7 @@ for (let index = 10; index > -1;index--) {
     scores.value.push(index);
     }
 
-    axios({
-        method:'get',
-        url : `${movieStore.API_URL}/detail/${movie_id}`
-    }).then((response)=>{
-        movie.value = response.data
-    }).catch((error)=>{
-        console.log(error)
-    })
+
 
 </script>
 

@@ -50,7 +50,7 @@
             <span style="margin-right: 8px;">{{ review.hate_users?.length }}</span>
         </div>
     </div>
-    <div v-else>
+    <div v-if="accountStore.user_username === review.user.username">
         <div style="display: flex; align-items: center; justify-content: flex-end;">
             <i class="bi bi-hand-thumbs-up-fill" style="margin-right: 8px;"></i>
             <span style="margin-right: 8px;">{{ review.like_users?.length }}</span>
@@ -337,7 +337,7 @@ const deleteReview = (review_id) => {
 
 /* modal or popup */
 .modal-container {
-    position: relative;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -454,4 +454,5 @@ button {
     /* Adjust the size of the stars */
     margin-right: 2px;
     /* Adjust the spacing between stars */
-}</style>
+}
+</style>

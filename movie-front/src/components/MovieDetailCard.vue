@@ -16,10 +16,16 @@
                       <p>{{  movieStore.movie.overview }}</p>
                       <div class="card-footer">
                         <div class="review-trailer">
-                          <i class="bi bi-heart-fill" @click="like" v-if="isLike === true"></i>
-                          <i class="bi bi-heart" @click="like" v-else></i>
+                          <div class="ranking-icons">
+                                <template v-for="i in 5">
+                                    <i :class="getStarClass(i, movieStore.movie.vote_average)"></i>
+                                </template>
+                            </div>
+                          <p>{{ movieStore.movie.vote_average }}</p>
                           <ReviewCreateView :movie="movieStore.movie" />
                           <TrailerModal v-if="movieStore.movie.trailer" :trailer-key="movieStore.movie.trailer" />
+                          <i class="bi bi-heart-fill" @click="like" v-if="isLike === true"></i>
+                          <i class="bi bi-heart" @click="like" v-else></i>
                         </div>
                       </div>
                   </div>
@@ -73,6 +79,22 @@ const like = function () {
     })
 }
 
+// 평점 별로 나타내기
+const getStarClass = (index, rank) => {
+    const fullStars = Math.round(rank / 2)
+    const halfStars = rank % 2 ? 1 : 0;
+
+    if (index < fullStars) {
+        return 'bi bi-star-fill';
+    } else if (index === fullStars && halfStars === 1) {
+        return 'bi bi-star-half';
+    } else if (index === fullStars && halfStars === 0) {
+        return 'bi bi-star-fill';
+    } else {
+        return 'bi bi-star';
+    }
+};
+
 </script>
 
 <style scoped>
@@ -113,5 +135,19 @@ const like = function () {
 }
 .info{
   margin-right: 10px;
+}
+.ranking-icons {
+    color: #ffc107;
+}
+
+
+/* Add Bootstrap icons styles or import them in your project */
+.bi-star,
+.bi-star-fill,
+.bi-star-half {
+    font-size: 1.5rem;
+    /* Adjust the size of the stars */
+    margin-right: 2px;
+    /* Adjust the spacing between stars */
 }
 </style>

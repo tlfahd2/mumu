@@ -29,6 +29,7 @@ def movie_list(request, sort_num, page_num):
             # 해당 유저가 좋아하는 음악 장르 추출 vue에서 문자열로 보내줌
             # 정규 표현식을 통해 단어들만 추출
             me = request.user
+            request.getlist()
             music_genre = me.music
             user_genres = re.findall(r'"(.*?)"', music_genre)
             # 해당 유저가 좋아요를 누른 모든 영화 
@@ -37,6 +38,7 @@ def movie_list(request, sort_num, page_num):
             for movie in like_movies:
                 for genre in user_genres:
                     users = movie.like_users.filter(music__icontains=genre)
+                    users = users.exclude(id=request.user.id)
                     if users:
                         movies = users[0].like_movies.all()
                         for user in users[1:]:

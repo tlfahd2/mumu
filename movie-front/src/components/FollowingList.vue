@@ -1,57 +1,64 @@
 <template>
-    <main class="main">
-      <div v-show="visible" class="modal">
-        <div class="modal-content">
-          <span class="close" @click="closeModal(event)">X</span>
-          <ul v-for="follower in user.followers">
-            <p @click="moveProfile(follower.username)" type="button">{{ follower.username }}</p>
-          </ul>
-        </div>
-      </div>
-    </main>
-    </template>
-  
-  <script setup>
-  import { ref } from 'vue'
-  import { useRouter, useRoute } from 'vue-router'
-  import axios from 'axios';
-  import { useAccountStore } from '../stores/account';
-  
-  
-  const accountStore = useAccountStore()
-  const router = useRouter()
-  const route = useRoute()
-  const visible = ref(false)
-  const user = ref({}
-  )
-  const closeModal = function(event) {
-    this.visible = !this.visible
+<main class="main">
+  <div v-for="following in user.followings" :key="following.username" class="list-item" @click="moveProfile(following.username)">
+    {{ following.username }}
+  </div>
+</main>
+  </template>
+
+<script setup>
+import { onMounted, ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useAccountStore } from '../stores/account';
+
+
+const accountStore = useAccountStore()
+const router = useRouter()
+const route = useRoute()
+const user = ref({})
+
+
+onMounted(() => {
+  accountStore.getUser(route.params.username)
+  user.value = accountStore.user
+})
+
+
+const moveProfile = function (username) {
+    router.push({ name: 'profile', params: { username: username}})
+}
+
+
+
+</script>
+
+<style scoped>
+@font-face {
+  font-family: "yeonsung";
+  src: url("../fonts/BMYEONSUNG_ttf.ttf")
+}
+  .main {
+    padding-top: 5.8rem;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: "yeonsung";
   }
-  
-  
-  const getUser = function () {
-      axios({
-        method: 'post',
-        url: `${accountStore.API_URL}/api/v1/accounts/${route.params.username}/`,
-        headers: {
-          Authorization: `Token ${accountStore.token}`
-        }
-      })
-      .then((res) => {
-        user.value = res.data
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    }
-  getUser()
-  
-  const moveProfile = function (username) {
-      router.push({ name: 'profile', params: { username: username}})
+
+  .list-item {
+    cursor: pointer;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
   }
-  </script>
-  
-  <style scoped>
-  
-  
-  </style>
+
+  .list-item:hover {
+    background-color: #f0f0f0;
+  }
+
+</style>

@@ -11,9 +11,11 @@
           </div>
       <p class="updated-date" style="text-align: right;">최종 수정: {{ formatDateTime(review.updated_at) }}</p>
       <hr>
-      <div class="button-container">
-        <button class="bi bi-pencil" style="border: none; background-color: transparent; margin-right: 10px;" @click="updateReview"></button>
-        <button class="bi bi-trash" style="border: none; background-color: transparent; margin-right: 10px;" @click="deleteReview"></button>
+      <div v-if="accountStore.user_username === review.user.username">
+        <div class="button-container">
+          <button class="bi bi-pencil" style="border: none; background-color: transparent; margin-right: 10px;" @click="updateReview"></button>
+          <button class="bi bi-trash" style="border: none; background-color: transparent; margin-right: 10px;" @click="deleteReview"></button>
+        </div>
       </div>
     </div>
   </template>

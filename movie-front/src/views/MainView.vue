@@ -48,8 +48,8 @@ import { useAccountStore } from '../stores/account'
 import { useMovieStore } from '../stores/movie'
 import axios from 'axios'
 import MovieCard from '../components/MovieCard.vue'
-// import InfiniteLoading from 'v3-infinite-loading'
-// import "v3-infinite-loading/lib/style.css";
+import InfiniteLoading from 'v3-infinite-loading'
+import "v3-infinite-loading/lib/style.css";
 
 const movieStore = useMovieStore()
 const accountStore = useAccountStore()

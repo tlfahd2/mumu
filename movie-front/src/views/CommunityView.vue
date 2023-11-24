@@ -77,6 +77,7 @@ import ReviewCard from '../components/ReviewCard.vue'
 const router = useRouter()
 const communityStore = useCommunityStore()
 const movieStore = useMovieStore()
+const accountStore = useAccountStore()
 
 const choice = ref(1)
 const movies = ref([])
@@ -199,94 +200,7 @@ const hate = function (review_id) {
 .custom-select-container {
   position: relative;
   width: 120px;
-  
-  
-  <script setup>
-  import { ref, computed, onMounted } from 'vue'
-  import { useRouter, useRoute } from 'vue-router'
-  import { useAccountStore } from '../stores/account'
-  import { useMovieStore } from '../stores/movie'
-  import { useCommunityStore } from '../stores/community'
-  import axios from 'axios'
-  import ArticleCard from '../components/ArticleCard.vue'
-  import ReviewCard from '../components/ReviewCard.vue'
-  
-  const router = useRouter()
-  const communityStore = useCommunityStore()
-  const movieStore = useMovieStore()
-  
-  const choice = ref(1)
-  const movies = ref([])
-  
-  onMounted(() => {
-      communityStore.getArticleList()
-  })
-  
-  const createArticle = () => {
-      router.push({ name:'createArticle' })
-  }
-  
-  const moveDetail = (article_id)=>{
-      router.push({ name:'articleDetail', params:{ article_id: article_id }})
-  }
-  
-  // 리뷰게시판
-  onMounted(() => {
-      movieStore.getReviewList()
-  })
-  
-  const moveReviewDetail = (review_id)=>{
-      router.push({ name:'reviewDetail', params:{ review_id: review_id }})
-  }
-  
-  
-  // 평점 별로 나타내기
-  const getStarClass = (index, rank) => {
-      const fullStars = Math.round(rank / 2)
-      const halfStars = rank % 2 ? 1 : 0;
-  
-      if (index < fullStars) {
-          return 'bi bi-star-fill';
-      } else if (index === fullStars && halfStars === 1) {
-          return 'bi bi-star-half';
-      } else if (index === fullStars && halfStars === 0) {
-          return 'bi bi-star-fill';
-      } else {
-          return 'bi bi-star';
-      }
-  };
-  
-  
-  </script>
-  
-  <style scoped>
-  @font-face {
-    font-family: "yeonsung";
-    src: url("../fonts/BMYEONSUNG_ttf.ttf")
-  }
-  @font-face {
-    font-family: "euljiro";
-    src: url("fonts/BMEuljiro10yearslater.ttf");
-  }
-  .main{
-      padding-top: 5.8rem;
-      font-family: 'yeonsung';
-  }
-  
-  .container {
-    max-width: 800px;
-  }
-  
-  .header-section {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .custom-select-container {
-    position: relative;
-    width: 120px;
-    
-  }
+}
   
   .custom-select {
     appearance: none;
