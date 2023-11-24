@@ -1,29 +1,34 @@
 <template>
     <div class="article">
-        <hr>
-        <p>{{ article.user?.username }}</p>
-        <hr>
-        <p>{{ article.title }}</p>
-        <p>{{ article.content }}</p>
-        <p>최종 수정일 :{{ article.updated_at }}</p>
-        <hr>
-        <button class="btn btn-sm btn-primary" @click="updateArticle">게시글 수정</button>
-        <button class="btn btn-sm btn-danger" @click="deleteArticle()">게시글 삭제</button>
-        <form @submit.prevent="createComment(article.id)">
-            <input type="text" placeholder="댓글을 입력해주세요" v-model="commentContent">
-            <button type="submit">작성</button>
-        </form>
-        <hr>
-        <CommentCard
+      <div class="article-header">
+        <p class="author">{{ article.user?.username }}</p>
+        <h2 class="title">{{ article.title }}</h2>
+        <p class="updated-date">최종 수정 : {{ formatDateTime(article.updated_at) }}</p>
+      </div>
+      <hr>
+      <div class="article-content">
+        <p class="content">{{ article.content }}</p>
+      </div>
+      <hr>
+      <div class="button-container">
+        <button class="bi bi-pencil" style="border: none; background-color: transparent; margin-right: 10px;" @click="updateArticle"></button>
+        <button class="bi bi-trash" style="border: none; background-color: transparent; margin-right: 10px;" @click="deleteArticle"></button>
+      </div>
+      <form class="comment-form" @submit.prevent="createComment(article.id)">
+        <input type="text" placeholder="댓글을 입력해주세요" v-model="commentContent" class="comment-input">
+        <button type="submit" class="bi bi-file-plus" style="border: none; background-color: transparent; margin-right: 10px;"></button>
+      </form>
+      <hr>
+      <CommentCard
         v-for="comment in communityStore.comments"
         :key="comment.id"
         :comment="comment"
         :article-id="article.id"
         @delete-comment="deleteComment"
-        />
-        <hr>
+      />
+      <hr>
     </div>
-</template>
+  </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
@@ -94,9 +99,122 @@ const deleteComment = (args) =>{
     })
 }
 
+const formatDateTime = function (dateTimeString) {
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+    };
+    const date = new Date(dateTimeString);
+    const formattedDate = date.toLocaleString('ko-KR', options);
+
+    return formattedDate
+}
+
 
 </script>
 
 <style scoped>
+@font-face {
+  font-family: "yeonsung";
+  src: url("../fonts/BMYEONSUNG_ttf.ttf")
+}
+@font-face {
+  font-family: "euljiro";
+  src: url("fonts/BMEuljiro10yearslater.ttf");
+}
 
+.article {
+  background-color: #f8f9fa; /* Light gray background */
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: 'yeonsung';
+}
+
+.article-header {
+  text-align: center;
+}
+
+.author {
+  font-weight: bold;
+}
+
+.title {
+  color: rgb(39, 90, 143); /* Blue color for the title */
+  margin: 10px 0;
+}
+
+.updated-date {
+  color: #777;
+}
+
+.article-content {
+  margin-bottom: 20px;
+}
+.button-container {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+}
+
+.btn {
+    font-size: small;
+  cursor: pointer;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 20px;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  filter: brightness(90%);
+}
+
+.update-btn {
+  background-color: #28a745; /* Green color for update button */
+  margin-left: 10px;
+}
+.submit-btn {
+  background-color: #2d9946; /* Green color for update button */
+  margin-left: 10px;
+}
+
+.delete-btn {
+  background-color: #dc3545; /* Red color for delete button */
+  margin-left: 10px;
+}
+
+.comment-form {
+  display: flex;
+  margin-top: 10px;
+}
+
+.comment-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin-right: 5px;
+}
+
+.comment-input:focus {
+  outline: none;
+}
+
+.comment-input::placeholder {
+  color: #ccc;
+}
+
+.comment-input:focus::placeholder {
+  color: transparent;
+}
+.updated-date {
+  color: #777;
+  text-align: right; /* Align to the right */
+}
 </style>

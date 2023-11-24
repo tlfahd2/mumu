@@ -11,24 +11,39 @@
                 <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
               </form>
               <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-person-circle"></i>
-          </a>
-          <ul class="dropdown-menu">
-
-            <RouterLink class= "dropdown-item" :to="{ name: 'profile', params: {username: accountStore.user_username} }">내 프로필</RouterLink>
-            
-            <li><hr class="dropdown-divider"></li>
-            <RouterLink class= "dropdown-item" @click="accountStore.logOut" :to="{ name: 'signup' }">로그아웃</RouterLink>
-          </ul>
-        </li>
-      </nav>
-    </div>
-  </header>
-  <ProfileView />
-  <RouterView/>
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="bi bi-person-circle"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <div>
+                <button type="button" class="dropdown-item" @click="showModdal = true">
+                  내 프로필
+                </button>
+                <ModifyPwd v-if="showModdal" @close="showModdal = false"> </ModifyPwd>
+              </div>
+              <li><hr class="dropdown-divider" /></li>
+              <RouterLink
+                class="dropdown-item"
+                @click="accountStore.logOut"
+                :to="{ name: 'signup' }"
+                >로그아웃</RouterLink
+              >
+            </ul>
+          </li>
+        </nav>
+      </div>
+    </header>
+    <ProfileView />
+    <RouterView />
   </div>
 </template>
+
 
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
@@ -39,6 +54,7 @@ import { useMovieStore } from './stores/movie.js'
 import axios from 'axios'
 import ProfileView from './views/ProfileView.vue'
 
+const showModify = ref(false);
 const movieStore = useMovieStore()
 const accountStore = useAccountStore()
 const router = useRouter()
