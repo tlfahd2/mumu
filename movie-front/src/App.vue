@@ -31,6 +31,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
 import { ref, computed, onMounted } from "vue";
@@ -43,9 +44,9 @@ import test from "./views/test.vue";
 
 
 const showModify = ref(false);
-const movieStore = useMovieStore();
-const accountStore = useAccountStore();
-const router = useRouter();
+const movieStore = useMovieStore()
+const accountStore = useAccountStore()
+const router = useRouter()
 const showModdal = ref(false);
 onMounted(() => {
   movieStore.getMovieList(1);

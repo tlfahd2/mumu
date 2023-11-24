@@ -1,7 +1,7 @@
 <template>
     <main class="main">
         <div>
-            <button style="width: 50px;" @click="handle_toggle(event)">
+            <button class="btn btn-secondary" @click="handle_toggle(event)">
                 리뷰
             </button>
             <div v-show="is_show" class="modal-wrap">
