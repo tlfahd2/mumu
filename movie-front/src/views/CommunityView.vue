@@ -1,33 +1,50 @@
 <template>
-    <main class="main container">
-      <div>
-        <section class="header-section">
-          <h3>커뮤니티</h3>
-          <h4>영화에 대한 이야기를 나누는 쉼터</h4>
-          <select v-model="choice" class="custom-select">
+  <main class="main container">
+    <div>
+      <section class="header-section">
+        <h3 style="font-family: 'euljiro';">커뮤니티</h3>
+        <h4>영화에 대한 이야기를 나누는 쉼터</h4>
+        <div class="custom-select-container">
+          <label for="category-select" class="sr-only"></label>
+          <select v-model="choice" id="category-select" class="custom-select">
             <option class="dropdown-item" :value="1">자유 게시판</option>
             <option class="dropdown-item" :value="2">리뷰 게시판</option>
           </select>
-        </section>
-  
-        <section class="content-section">
-          <h3 v-if="choice === 1">자유 게시판</h3>
-          <button v-if="choice === 1" @click="createArticle" class="custom-button">게시글 생성</button>
-          <div v-if="choice === 1" v-for="article in communityStore?.articles" :key="article.id" @click="moveDetail(article.id)" class="article-card">
-            <p>{{ article.title }}</p>
+          <span class="custom-arrow"></span>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <div class="category-title" v-if="choice === 1">
+          <h4>자유 게시판</h4>
+          <button @click="createArticle" class="bi bi-file-plus" style="border: none; background-color: transparent; margin-right: 10px;"></button>
+        </div>
+        <div v-if="choice === 1" v-for="article in communityStore?.articles" :key="article.id" @click="moveDetail(article.id)" class="article-card">
+          <p>{{ article.title }}</p>
+        </div>
+
+        <div class="category-title" v-if="choice === 2">
+          <h3>리뷰 게시판</h3>
+        </div>
+        <div v-if="choice === 2" v-for="review in movieStore?.reviews" :key="review.id" @click="moveReviewDetail(review.id)" class="review-card">
+      <div class="review-content">
+        <img :src="movieStore.BASE_IMAGE_URL + review.movie.poster_path" :alt="review.movie.title" class="movie-poster">
+        <div class="details">
+          <p class="title">{{ review.movie.title }}</p>
+          <p class="content">{{ review.content }}</p>
+          <div class="ranking-icons">
+              <template v-for="i in 5">
+                  <i :class="getStarClass(i, review.rank)"></i>
+              </template>
           </div>
-  
-          <h1 v-if="choice === 2">리뷰 게시판</h1>
-          <div v-if="choice === 2" v-for="review in movieStore?.reviews" :key="review.id" @click="moveReviewDetail(review.id)" class="review-card">
-            <img :src="movieStore.BASE_IMAGE_URL + review.movie.poster_path" :alt="review.movie.title" class="movie-poster">
-            <p>{{ review.movie.title }}</p>
-            <p>{{ review.content }}</p>
-            <p>{{ review.rank }}</p>
-          </div>
-        </section>
+        </div>
       </div>
-    </main>
-  </template>
+    </div>
+      </section>
+    </div>
+  </main>
+</template>
+
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
@@ -67,72 +84,157 @@ const moveReviewDetail = (review_id)=>{
     router.push({ name:'reviewDetail', params:{ review_id: review_id }})
 }
 
-// 영화별 리뷰
-const moveMovieReview = (movie_id) => {
-    router.push({ name: 'movieReviews', params: {movie_id: movie_id}})
-}
+
+// 평점 별로 나타내기
+const getStarClass = (index, rank) => {
+    const fullStars = Math.round(rank / 2)
+    const halfStars = rank % 2 ? 1 : 0;
+
+    if (index < fullStars) {
+        return 'bi bi-star-fill';
+    } else if (index === fullStars && halfStars === 1) {
+        return 'bi bi-star-half';
+    } else if (index === fullStars && halfStars === 0) {
+        return 'bi bi-star-fill';
+    } else {
+        return 'bi bi-star';
+    }
+};
 
 
 </script>
 
 <style scoped>
+@font-face {
+  font-family: "yeonsung";
+  src: url("../fonts/BMYEONSUNG_ttf.ttf")
+}
+@font-face {
+  font-family: "euljiro";
+  src: url("fonts/BMEuljiro10yearslater.ttf");
+}
 .main{
     padding-top: 5.8rem;
+    font-family: 'yeonsung';
 }
-.article{
-    border:1px solid black;
+
+.container {
+  max-width: 800px;
 }
 
 .header-section {
-    margin-bottom: 20px;
-  }
-
-  .custom-select {
-    border-radius: 10px; /* Adds rounded corners */
-    padding: 8px; /* Adds padding inside the select */
-    border: 1px solid #ccc; /* Adds a border for better visibility */
-    background-color: #f5f5f5; /* Sets a light background color */
-    font-size: 14px; /* Sets the font size */
-    font-family: 'Arial', sans-serif; /* Specifies the font */
-  }
-
-  .custom-button {
-    border-radius: 10px; /* Adds rounded corners */
-    padding: 10px 20px; /* Adds padding inside the button */
-    background-color: #3498db; /* Sets the background color */
-    color: #fff; /* Sets the text color */
-    border: none; /* Removes the default button border */
-    cursor: pointer; /* Changes the cursor to a pointer on hover */
-    font-size: 16px; /* Sets the font size */
-    font-family: 'Arial', sans-serif; /* Specifies the font */
-    margin-left: auto;  
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-  .content-section {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-  }
+.custom-select-container {
+  position: relative;
+  width: 120px;
+  
+}
 
-  .article-list,
-  .review-list {
-    display: flex;
-    flex-direction: column; /* Display items in a column */
-  }
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  height: fit-content;
+}
 
-  .article-card,
-  .review-card {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
-    margin: 10px;
-    cursor: pointer;
-    width: 200px;
-  }
+.custom-arrow {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #555;
+}
 
-  .movie-poster {
-    width: 100%;
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
+.content-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.category-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.custom-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.article-card,
+.review-card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  background-color: #e4dcdc;
+  border-radius: 20px;
+}
+
+.review-card {
+  display: flex;
+  cursor: pointer;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.movie-poster {
+  width: 100px; /* Adjust the width as needed */
+  height: auto;
+  margin-right: 20px;
+}
+
+.review-content {
+  display: flex;
+  align-items: center;
+}
+
+.details {
+  flex: 1;
+}
+
+.title {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.content {
+  margin-bottom: 5px;
+}
+.ranking-icons {
+    color: #ffc107;
+}
+
+
+/* Add Bootstrap icons styles or import them in your project */
+.bi-star,
+.bi-star-fill,
+.bi-star-half {
+    font-size: 1.5rem;
+    /* Adjust the size of the stars */
+    margin-right: 2px;
+    /* Adjust the spacing between stars */
+}
+
 </style>

@@ -328,7 +328,7 @@ const handleChange = function() {
   -o-transition: opacity 2s;
   transition: opacity 2s;
   background-size: contain; 
-  filter: blur(1px);
+
 }
 
 @keyframes fadeInTitle{
