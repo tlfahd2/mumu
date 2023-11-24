@@ -98,7 +98,6 @@ console.log(props.username)
 onMounted(() => {
   accountStore.getUser(props.username)
   setTimeout(() => {
-    console.log(accountStore.user)
     if (accountStore.user.followers?.find((follower) => follower.id === accountStore.user_pk)) {
       isFollow.value = true
     }

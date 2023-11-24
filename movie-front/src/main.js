@@ -3,8 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import InfiniteLoading from 'v3-infinite-loading'
-import "v3-infinite-loading/lib/style.css";
-
+import "v3-infinite-loading/lib/style.css"
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

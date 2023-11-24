@@ -33,6 +33,17 @@ export const useMovieStore = defineStore('movie', () => {
             console.log(error)
            })
     }
+
+    const getMovie = (movie_id) =>{
+      axios({
+        method:'get',
+        url : `${API_URL}/detail/${movie_id}`
+      }).then((response)=>{
+          movie.value = response.data
+      }).catch((error)=>{
+          console.log(error)
+      })
+    }
     
     const getGenreList = () =>{
       axios({
@@ -113,5 +124,5 @@ export const useMovieStore = defineStore('movie', () => {
     }
 
 
-  return { movies, movie, genres, reviews, review, movie_reviews, movie_review, result, API_URL, BASE_IMAGE_URL, getMovieList, getGenreList, getReviewList, getReview, getMovieReviewList, getSerchResult, getMovieReviewDetail }
+  return { movies, movie, genres, reviews, review, movie_reviews, movie_review, result, API_URL, BASE_IMAGE_URL, getMovieList, getMovie, getGenreList, getReviewList, getReview, getMovieReviewList, getSerchResult, getMovieReviewDetail }
 }, { persist:true })

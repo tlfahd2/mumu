@@ -120,7 +120,6 @@ const loadMoreData = async ($state) => {
     30%{transform: rotate(15deg);}
     40%{transform: rotate(-15deg);}
 }
-
 .btn{
     font-family: "yeonsung";
     font-size: 30px;
@@ -142,7 +141,6 @@ const loadMoreData = async ($state) => {
 .movie-list{
     display: flex;
     flex-wrap: wrap;
-    width: 90vw;
 }
 
 </style>
