@@ -1,9 +1,11 @@
 <template>
     <main class="main container">
-        <div class="movie-list" v-if="movieStore.result.length === 0">
+        <h2 class="title"> "{{ route.params.keyword }}"에 대한 검색결과</h2>
+        <div
+            v-if="movieStore.result.length === 0">
             <h3>검색 결과가 없습니다</h3>
         </div>
-        <div v-else>
+        <div v-else class="movie-list">
             <MovieCard
             v-for="movie in movieStore.result"
             :key="movie.id"
@@ -25,9 +27,7 @@ import MovieCard from '../components/MovieCard.vue'
 
 
 const movieStore = useMovieStore()
-const accountStore = useAccountStore()
 const route = useRoute()
-const router= useRouter()
 let keyword = route.params.keyword
 const movies = ref([])
 
@@ -50,9 +50,16 @@ onBeforeRouteUpdate((to, from) => {
 </script>
 
 <style scoped>
+@font-face {
+  font-family: "yeonsung";
+  src: url("../fonts/BMYEONSUNG_ttf.ttf")
+}
+.title{
+    font-family: "yeonsung";
+}
 .movie-list{
     display: flex;
     flex-wrap: wrap;
-    width: 90vw;
 }
+
 </style>

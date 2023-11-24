@@ -1,23 +1,16 @@
 <template>
   <div>
-    <header>
-      <div>
-        <nav class="navbar fixed-top" v-if="accountStore.isLogin">
-          <RouterLink class="nav-item" :to="{ name: 'main' }">홈</RouterLink>
-          <RouterLink class="nav-item" :to="{ name: 'communitymain' }">커뮤니티</RouterLink>
-          <form class="d-flex" role="search" @submit.prevent="getSearchMovie">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="검색어를 입력하세요"
-              aria-label="Search"
-              v-model="searchInput"
-            />
-            <button class="btn btn-outline-success" type="submit">
-              <i class="bi bi-search"></i>
-            </button>
-          </form>
-          <li class="nav-item dropdown">
+      <header>
+        <div>
+          <nav class="navbar fixed-top" v-if="accountStore.isLogin">
+              <RouterLink class= "nav-item" :to="{ name: 'main' }">홈</RouterLink>
+              <RouterLink class= "nav-item" :to="{ name: 'communitymain' }">커뮤니티</RouterLink>
+              <RouterLink class= "nav-item" :to="{ name: 'profile', params: {username: accountStore.user_username} }">커뮤니티</RouterLink>
+              <form class="d-flex" role="search" @submit.prevent="getSearchMovie">
+                <input class="form-control me-2" type="search" placeholder="검색어를 입력하세요" aria-label="Search" v-model="searchInput">
+                <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+              </form>
+              <li class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -51,6 +44,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
 import { ref, computed, onMounted } from "vue";
@@ -62,9 +56,9 @@ import ProfileView from "./views/ProfileView.vue";
 // import ModifyPwd from "./views/ModifyPwd.vue";
 
 const showModify = ref(false);
-const movieStore = useMovieStore();
-const accountStore = useAccountStore();
-const router = useRouter();
+const movieStore = useMovieStore()
+const accountStore = useAccountStore()
+const router = useRouter()
 const showModdal = ref(false);
 onMounted(() => {
   movieStore.getMovieList(1);
