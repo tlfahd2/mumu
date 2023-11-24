@@ -1,49 +1,204 @@
 <template>
-    <main class="main container">
-      <div>
-        <section class="header-section">
-          <h3 style="font-family: 'euljiro';">커뮤니티</h3>
-          <h4>영화에 대한 이야기를 나누는 쉼터</h4>
-          <div class="custom-select-container">
-            <label for="category-select" class="sr-only"></label>
-            <select v-model="choice" id="category-select" class="custom-select">
-              <option class="dropdown-item" :value="1">자유 게시판</option>
-              <option class="dropdown-item" :value="2">리뷰 게시판</option>
-            </select>
-            <span class="custom-arrow"></span>
-          </div>
-        </section>
-  
-        <section class="content-section">
-          <div class="category-title" v-if="choice === 1">
-            <h4>자유 게시판</h4>
-            <button @click="createArticle" class="bi bi-file-plus" style="border: none; background-color: transparent; margin-right: 10px;"></button>
-          </div>
-          <div v-if="choice === 1" v-for="article in communityStore?.articles" :key="article.id" @click="moveDetail(article.id)" class="article-card">
-            <p>{{ article.title }}</p>
-          </div>
-  
-          <div class="category-title" v-if="choice === 2">
-            <h3>리뷰 게시판</h3>
-          </div>
-          <div v-if="choice === 2" v-for="review in movieStore?.reviews" :key="review.id" @click="moveReviewDetail(review.id)" class="review-card">
-        <div class="review-content">
-          <img :src="movieStore.BASE_IMAGE_URL + review.movie.poster_path" :alt="review.movie.title" class="movie-poster">
-          <div class="details">
-            <p class="title">{{ review.movie.title }}</p>
-            <p class="content">{{ review.content }}</p>
-            <div class="ranking-icons">
-                <template v-for="i in 5">
-                    <i :class="getStarClass(i, review.rank)"></i>
-                </template>
+  <main class="main container">
+    <div>
+      <section class="header-section">
+        <h3 style="font-family: 'euljiro';">커뮤니티</h3>
+        <h4>영화에 대한 이야기를 나누는 쉼터</h4>
+        <div class="custom-select-container">
+          <label for="category-select" class="sr-only"></label>
+          <select v-model="choice" id="category-select" class="custom-select">
+            <option class="dropdown-item" :value="1">자유 게시판</option>
+            <option class="dropdown-item" :value="2">리뷰 게시판</option>
+          </select>
+          <span class="custom-arrow"></span>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <div class="category-title" v-if="choice === 1">
+          <h4>자유 게시판</h4>
+          <button @click="createArticle" class="bi bi-file-plus" style="border: none; background-color: transparent; margin-right: 10px;"></button>
+        </div>
+        <div v-if="choice === 1" v-for="article in communityStore?.articles" :key="article.id" @click="moveDetail(article.id)" class="article-card">
+          <p>{{ article.title }}</p>
+        </div>
+
+        <div class="category-title" v-if="choice === 2">
+          <h3>리뷰 게시판</h3>
+        </div>
+        <div v-if="choice === 2" v-for="review in movieStore?.reviews" :key="review.id" @click="moveReviewDetail(review.id)" class="review-card">
+      <div class="review-content">
+        <img :src="movieStore.BASE_IMAGE_URL + review.movie.poster_path" :alt="review.movie.title" class="movie-poster">
+        <div class="details">
+          <p class="title">{{ review.movie.title }}</p>
+          <p class="content">{{ review.content }}</p>
+          <div class="ranking-icons">
+              <template v-for="i in 5">
+                  <i :class="getStarClass(i, review.rank)"></i>
+              </template>
             </div>
-          </div>
+            <!-- <div v-if="accountStore.user_username !== review.user.username"> -->
+      <!-- <div style="display: flex; align-items: center; justify-content: flex-end;">
+          <i @click="like(review.id)" v-if="isLike === true" class="bi bi-hand-thumbs-up-fill" style="margin-right: 8px;"></i>
+          <i @click="like(review.id)" v-if="isLike === false" class="bi bi-hand-thumbs-up" style="margin-right: 8px;"></i>
+          <span style="margin-right: 8px;">{{ review.like_users?.length }}</span>
+          <i @click="hate(review.id)" v-if="isHate === true" class="bi bi-hand-thumbs-down-fill" style="margin-right: 8px;"></i>
+          <i @click="hate(review.id)" v-if="isHate === false" class="bi bi-hand-thumbs-down" style="margin-right: 8px;"></i>
+          <span style="margin-right: 8px;">{{ review.hate_users?.length }}</span>
+      </div> -->
+  <!-- </div> -->
+  <!-- <div v-if="accountStore.user_username === review.user.username">
+      <div style="display: flex; align-items: center; justify-content: flex-end;">
+          <i class="bi bi-hand-thumbs-up-fill" style="margin-right: 8px;"></i>
+          <span style="margin-right: 8px;">{{ review.like_users?.length }}</span>
+          <i class="bi bi-hand-thumbs-down-fill" style="margin-right: 8px;"></i>
+          <span style="margin-right: 8px;">{{ review.hate_users?.length }}</span>
+      </div>
+  </div> -->
         </div>
       </div>
-        </section>
-      </div>
-    </main>
-  </template>
+    </div>
+      </section>
+    </div>
+  </main>
+</template>
+
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useAccountStore } from '../stores/account'
+import { useMovieStore } from '../stores/movie'
+import { useCommunityStore } from '../stores/community'
+import axios from 'axios'
+import ArticleCard from '../components/ArticleCard.vue'
+import ReviewCard from '../components/ReviewCard.vue'
+
+const router = useRouter()
+const communityStore = useCommunityStore()
+const movieStore = useMovieStore()
+
+const choice = ref(1)
+const movies = ref([])
+
+const isLike = ref(false)
+const isHate = ref(false)
+
+onMounted(() => {
+    communityStore.getArticleList()
+    if (movieStore.movie_review.like_users?.includes(accountStore.user_pk)){
+    isLike.value = true    
+  }
+  else{
+    isLike.value = false
+  }
+  if (movieStore.movie_review.hate_users?.includes(accountStore.user_pk)){
+    isHate.value = true    
+  }
+  else{
+    isHate.value = false
+  }
+})
+
+const createArticle = () => {
+    router.push({ name:'createArticle' })
+}
+
+const moveDetail = (article_id)=>{
+    router.push({ name:'articleDetail', params:{ article_id: article_id }})
+}
+
+// 리뷰게시판
+onMounted(() => {
+    movieStore.getReviewList()
+})
+
+const moveReviewDetail = (review_id)=>{
+    router.push({ name:'reviewDetail', params:{ review_id: review_id }})
+}
+
+
+// 평점 별로 나타내기
+const getStarClass = (index, rank) => {
+    const fullStars = Math.round(rank / 2)
+    const halfStars = rank % 2 ? 1 : 0;
+
+    if (index < fullStars) {
+        return 'bi bi-star-fill';
+    } else if (index === fullStars && halfStars === 1) {
+        return 'bi bi-star-half';
+    } else if (index === fullStars && halfStars === 0) {
+        return 'bi bi-star-fill';
+    } else {
+        return 'bi bi-star';
+    }
+};
+
+// 리뷰 좋아요 싫어요
+const like = function (review_id) {
+    axios({
+        method: 'post',
+        url: `${movieStore.API_URL}/like_reviews/${review_id}/${accountStore.user_pk}/`,
+        headers: {
+            Authorization: `Token ${accountStore.token}`
+        }
+    })
+        .then((res) => {
+            isLike.value = !isLike.value
+            accountStore.getUser(accountStore.user_username)
+            movieStore.getMovieReviewList(movie_id)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+const hate = function (review_id) {
+    axios({
+        method: 'post',
+        url: `${movieStore.API_URL}/hate_reviews/${review_id}/${accountStore.user_pk}/`,
+        headers: {
+            Authorization: `Token ${accountStore.token}`
+        }
+    })
+        .then((res) => {
+            isHate.value = !isHate.value
+            accountStore.getUser(accountStore.user_username)
+            movieStore.getMovieReviewList(movie_id)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+</script>
+
+<style scoped>
+@font-face {
+  font-family: "yeonsung";
+  src: url("../fonts/BMYEONSUNG_ttf.ttf")
+}
+@font-face {
+  font-family: "euljiro";
+  src: url("fonts/BMEuljiro10yearslater.ttf");
+}
+.main{
+    padding-top: 5.8rem;
+    font-family: 'yeonsung';
+}
+
+.container {
+  max-width: 800px;
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.custom-select-container {
+  position: relative;
+  width: 120px;
   
   
   <script setup>

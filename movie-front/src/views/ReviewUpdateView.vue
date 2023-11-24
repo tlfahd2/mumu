@@ -7,7 +7,7 @@
           <select v-model="rank">
                     <option v-for="score in scores"> {{ score }}</option>
                 </select>
-          <button class="bi bi-pencil" style="border: none; background-color: transparent; margin-right: 10px; " @click="updateReview(movie_id)"></button>
+          <button class="bi bi-pencil" style="border: none; background-color: transparent; margin-right: 10px; " @click="updateReview()"></button>
         </form>
       </div>
     </main>
@@ -40,10 +40,10 @@ onMounted(()=>{
     movie_id.value = movieStore.review.movie.id
 })
 
-const updateReview = (movie_id) =>{
+const updateReview = () =>{
         axios({
             method: 'put',
-            url: `${movieStore.API_URL}/${movie_id}/reviews/${review_id}/`,
+            url: `${movieStore.API_URL}/reviews/${review_id}/`,
             data : {
                 content : content.value,
                 rank : rank.value

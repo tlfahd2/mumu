@@ -50,6 +50,14 @@
             <span style="margin-right: 8px;">{{ review.hate_users?.length }}</span>
         </div>
     </div>
+    <div v-else>
+        <div style="display: flex; align-items: center; justify-content: flex-end;">
+            <i class="bi bi-hand-thumbs-up-fill" style="margin-right: 8px;"></i>
+            <span style="margin-right: 8px;">{{ review.like_users?.length }}</span>
+            <i class="bi bi-hand-thumbs-down-fill" style="margin-right: 8px;"></i>
+            <span style="margin-right: 8px;">{{ review.hate_users?.length }}</span>
+        </div>
+    </div>
 </div>
                             <hr>
                         </div>
