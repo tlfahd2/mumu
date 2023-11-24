@@ -1,9 +1,10 @@
 <template>
     <main class="main">
         <div>
-            <ReviewCard
-            :review="movieStore.review"
-            />
+          <div class="review-container">
+    <ReviewCard :review="movieStore.review" style="width: 60%;" />
+  </div>
+
             <div v-if="accountStore.user_username !== user.username">
             <button @click="like" v-if="isLike === true">좋아요 취소</button>
             <button @click="like" v-if="isLike === false && isHate === false">좋아요</button>
@@ -93,5 +94,21 @@ const hate = function () {
 </script>
 
 <style scoped>
-
+@font-face {
+  font-family: "yeonsung";
+  src: url("../fonts/BMYEONSUNG_ttf.ttf")
+}
+@font-face {
+  font-family: "euljiro";
+  src: url("fonts/BMEuljiro10yearslater.ttf");
+}
+.main{
+    padding-top: 5.8rem;
+    font-family: 'yeonsung';
+}
+.review-container {
+  display: flex;
+  justify-content: center;
+  height: auto; /* Optional: Set a height if you want to center vertically within the viewport */
+}
 </style>
